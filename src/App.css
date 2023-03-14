@@ -36,3 +36,153 @@
     transform: rotate(360deg);
   }
 }
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-container{
+  display: flex;
+
+}
+
+main{
+  flex: 1;
+  padding: 20px;
+}
+
+.title{
+  font-size: 30px;
+}
+
+.sidebar{
+  background : rgb(0,7,51);
+  color:white;
+  height: 100vh;
+  position: sticky;
+  top:0;
+}
+
+.nav{
+  background : rgb(0,7,51);
+  opacity: 1;
+  color:white;
+  height: 45px;
+  border: burlywood;
+  border-radius: 7px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top_section{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 10px;
+}
+
+.logo{
+  font-size: 18px;
+  line-height: 0;
+}
+
+.search{
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  height: 30px;
+}
+
+.search input{
+  border: none;
+  border-radius: 5px;
+  margin-left: 5px;
+  background: rgb(238,238,238);
+
+}
+
+.link{
+  display: flex;
+  color: white;
+  text-decoration: none;
+  gap: 10px;
+  padding: 5px 10px;
+  border-right: 4px solid transparent;
+  transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.link:hover{
+  border-right: 4px solid white;
+  transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  background: rgb(45,51,89);
+}
+
+.active{
+  border-right: 4px solid white;
+  background: rgb(45,51,89);
+}
+
+.link_text{
+  white-space: nowrap; 
+  font-size: 15px;
+}
+
+
+.left{
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.right{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.mr{
+  margin-right: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.mr1{
+  margin-right: 13px;
+}
+
+/* dropdown */
+
+
+/* end dropdown */
+
+/* sidebardropdown */
+.menu{
+  display: flex;
+  color: white;
+  text-decoration: none;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-right: 4px solid transparent;
+  transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.menu-item{
+  display: flex;
+  gap: 10px;
+}
+
+.menu-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-container .link {
+  padding-left: 20px;
+  border-bottom: white 0.5px solid;
+}
