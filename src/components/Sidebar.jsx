@@ -1,7 +1,7 @@
 import React from 'react'
 import {AnimatePresence, motion} from 'framer-motion';
 import {FaHome,FaClock,FaUserInjured,FaBars,FaSearch, FaAngleDown,FaListUl,FaRegRegistered,FaCreditCard} from 'react-icons/fa';
-import {MdOutlineCardMembership,MdCreate} from 'react-icons/md'
+import {MdOutlineCardMembership,MdCreate,MdHome} from 'react-icons/md'
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import SidebarMenu from './SidebarMenu';
@@ -53,6 +53,23 @@ const routes= [
                 path : '/patient/credit_list',
                 name : 'Credit', 
                 icon : <FaCreditCard/>   ,
+            },
+        ],
+    },
+    {
+        path : '/master',
+        name : 'Master', 
+        icon : <MdHome/>,
+        subRoutes : [
+            {
+                path : '/treatment/list',
+                name : 'Treatment List', 
+                icon : <FaListUl/>   ,
+            },
+            {
+                path : '/treatment/create',
+                name : 'Treatment Create', 
+                icon : <FaRegRegistered/>   ,
             },
         ],
     },

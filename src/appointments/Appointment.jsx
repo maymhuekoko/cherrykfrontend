@@ -1,8 +1,10 @@
-import React from 'react'
+import React,{useState,useEffect}  from 'react'
 import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import {AiOutlinePlus,AiTwotoneFilter,AiFillInfoCircle} from 'react-icons/ai'
 import {FaFileExport} from "react-icons/fa"
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const Top = styled.div`
 display : flex;
@@ -74,6 +76,18 @@ border-radius:4px;
 `
 
 const Appointment = () => {
+  const [appointments,setAppointments] = useState([]);
+
+  useEffect(()=> {
+    const getAppointments = async () =>{
+      try{
+        const res = await axios.get('http://localhost:9000/api/Appointments');
+        setAppointments(res.data.list);
+      }catch(err){}
+    };
+    getAppointments();
+  },[]);
+
   return (
     <div>
         <Nav/>
@@ -95,17 +109,18 @@ const Appointment = () => {
             </Tr>
             </Thead>
             <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>2023-03-08</Td>
-              <Td>15:40</Td>
-              <Td>Pyae Phyo Ko Ko</Td>
-              <Td>09449032379</Td>
-              <Td>Test Dr. 2</Td>
-              <Td>Patient</Td>
-              <Td><Badge>New</Badge></Td>
-              <Td><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Td>
-            </Tr>
+            {appointments.map((appointment,i) => (
+              <Tr key={appointment.id}>
+              <Td>{++i}</Td>
+              <Td>{appointment.date}</Td>
+              <Td>{appointment.time}</Td>
+              <Td>{appointment.relatedPatient.name}</Td>
+              <Td>{appointment.phone}</Td>
+              <Td>{appointment.relatedDoctor.name}</Td>
+              <Td>{appointment.description}</Td>
+              <Td><Badge>{appointment.relatedPatient.patientStatus}</Badge></Td>
+              <Td><Link to='/appointment/detail'><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Link></Td>
+            </Tr> ))}
             </Tbody>
           </Table>
           </Div>
