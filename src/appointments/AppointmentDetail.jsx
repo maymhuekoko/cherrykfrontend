@@ -190,6 +190,7 @@ const AppointmentDetail = () => {
          setLeftAmount(0);
          document.getElementById('paid').value = 0;
          setIsOpen(false);
+         getpatient();
      })
   }
   return (
@@ -275,7 +276,7 @@ const AppointmentDetail = () => {
                 <Td>{treat.relatedTreatment}</Td>
                 <Td><Badge>Ongoing</Badge></Td>
                 <Td>Test Dr.1</Td>
-                <Td>3 Times</Td>
+                <Td>{treat.relatedAppointments.length}Times</Td>
                 <Td>{treat.totalAmount}</Td>
                 <Td>{treat.leftOverAmount}</Td>
                 <Td><Link to={'/payment/'+treat._id}><Btn>Payment</Btn></Link></Td>

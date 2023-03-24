@@ -1,9 +1,11 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Nav from '../components/Navbar'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import styled from 'styled-components';
 import RepayDialog from '../dialogs/RepayDialog';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const Badge = styled.span`
 background:rgb(0,7,51);
@@ -14,6 +16,20 @@ border-radius:4px;
 `
 const Payment = () => {
   const [isShow,setIsShow] = useState(false);
+  const selection_id = useLocation().pathname.split('/')[2];
+  const [selection,setSelection] = useState([]);
+  
+  useEffect(()=>{
+   getSelection();
+  },[])
+
+  const getSelection = async () =>{
+    const res =await axios.get('http://localhost:9000/api/treatment-selection/'+selection_id);
+    
+    console.log(res.data.data);
+    setSelection(res.data.data);
+  }
+  
   return (
     <div>
         <Nav/>
@@ -59,8 +75,8 @@ const Payment = () => {
                 <td>Left-Over Amount</td>
                 <td>Action</td>
                 </tr>
-                <tr>
-                <td>1</td>
+                {selection.map((select,i)=>(<tr>
+                <td>{++i}</td>
                 <td>TM-001</td>
                 <td><Badge>Ongoing</Badge></td>
                 <td>Test Dr.1</td>
@@ -72,7 +88,7 @@ const Payment = () => {
                 <button className='btn btn-m btn-outline-primary'>Related</button>&nbsp;
                 <button className='btn btn-m btn-outline-primary' onClick={()=>setIsShow(true)}>Repay</button>
                 </td>
-                </tr>
+                </tr>))}
                 </thead>
                 </table>
             </TabPanel>
