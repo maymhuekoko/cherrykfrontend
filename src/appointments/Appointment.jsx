@@ -119,7 +119,7 @@ const Appointment = () => {
               <Td>{appointment.relatedDoctor.name}</Td>
               <Td>{appointment.description}</Td>
               <Td><Badge>{appointment.relatedPatient.patientStatus}</Badge></Td>
-              <Td><Link to='/appointment/detail'><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Link></Td>
+              <Td><Link to={'/appointment/'+appointment._id}><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Link></Td>
             </Tr> ))}
             </Tbody>
           </Table>

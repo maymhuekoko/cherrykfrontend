@@ -1,8 +1,10 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import { Link,useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const Top = styled.div`
 display : flex;
@@ -102,6 +104,94 @@ justify-content: flex-end;
 `;
 
 const AppointmentDetail = () => {
+  const [patient,setPatient] = useState('');
+  const [doctor,setDoctor] = useState('');
+  const [isopen,setIsOpen] = useState(false);
+  const [isCash,setIsCash] = useState(false);
+  const [leftAmount,setLeftAmount] = useState('');
+  const [treatments,setTreatments] = useState([]);
+  const [selections,setSelections] = useState([]);
+  const [accounts,setAccounts] = useState([]);
+  const [accountings,setAccountings] = useState([]);
+  const [treatmentCode,setTreatmentCode] = useState('');
+  const [treatmentId,setTreatmentId] = useState('');
+  const [totalAmount,setTotalAmount] = useState('');
+  const [method,setMethod] = useState('');
+  const [bankacc,setBankAcc] = useState('');
+  const appointmentid = useLocation().pathname.split("/")[2];
+  console.log(appointmentid);
+  useEffect(()=>{
+    const getTreatments = async () =>{
+      try{
+        const res = await axios.get('http://localhost:9000/api/treatments');
+        setTreatments(res.data.list);
+      }catch(err){}
+    };
+   
+    const getAccounts = async () =>{
+      try{
+        const res = await axios.get('http://localhost:9000/api/accounting-lists');
+        setAccounts(res.data.list);
+        setAccountings(res.data.list);
+      }catch(err){}
+    };
+    getAccounts();
+    getTreatments();
+    getpatient();
+  },[])
+  const getpatient = async () => {
+    const res = await axios.get('http://localhost:9000/api/appointment/'+appointmentid);
+    setPatient(res.data.data[0].relatedPatient);
+    setDoctor(res.data.data[0].relatedDoctor);
+    // res.data.data[0].relatedTreatmentSelection.map((el)=>{
+    //   selections.push(el);
+    // })
+    // const uniqueTags = [];
+    res.data.data[0].relatedTreatmentSelection.map((item) => {
+      var findItem = selections.find((x) => x._id === item._id);
+      if (!findItem) selections.push(item);
+    });
+  
+    console.log('hello');
+    console.log(res.data.data[0].relatedTreatmentSelection.length);
+    console.log(selections);
+  }
+  const getTreatmentCode = async (id) => {
+    const res = await axios.get('http://localhost:9000/api/treatment/'+id);
+    // console.log(res.data.data[0].treatmentCode);
+    setTreatmentCode(res.data.data[0].treatmentCode);
+    setTreatmentId(id);
+    setTotalAmount(res.data.data[0].sellingPrice)
+  }
+  const getPaymentMethod = (val) => {
+    if(val == 'Credit'){
+     document.getElementById('paid').value = 0;
+     setLeftAmount(totalAmount);
+    }else{
+      if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.code == 'MC-1'))}
+      if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.accountingTypes == "Current Assets" && el.code != 'MC-1'))}
+      setIsCash(true);
+      document.getElementById('paid').value = 0;
+      setLeftAmount('');
+    }
+    setMethod(val);
+  }
+  const storeTreatmentSelection = () => {
+    var paid = document.getElementById('paid').value;
+    const data = {
+      paymentMethod:method,relatedBank:bankacc,appointment:appointmentid,
+      paidAmount:paid,totalAmount:totalAmount,relatedTreatment:treatmentId,
+      relatedPatient:patient._id,relatedDoctor:doctor._id,phone:patient.phone,
+    }
+    const res = axios.post('http://localhost:9000/api/treatment-selection',data)
+     .then(function (response) {
+         console.log('success');
+         setTotalAmount(0);
+         setLeftAmount(0);
+         document.getElementById('paid').value = 0;
+         setIsOpen(false);
+     })
+  }
   return (
     <div>
       <Nav/>
@@ -114,35 +204,35 @@ const AppointmentDetail = () => {
             <Div className='row'>
             <Div className='col-3 form-group '>
                 <Label>Patient Name<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.name}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>Patient Id<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.patientID}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>Status<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.patientStatus}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>Email Address<Span>*</Span></Label>
-                <Input type="email" className='form-control'/>
+                <Input type="email" className='form-control' value={patient.email}/>
             </Div>
             <Div className='col-3 form-group '>
                 <Label>Member Status<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.patientStatus}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>Occupancy<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.accupancy}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>Gender<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={patient.gender}/>
             </Div>
             <Div className='col-3 form-group'>
                 <Label>DOB<Span>*</Span></Label>
-                <Input type="date" className='form-control'/>
+                <Input type="date" className='form-control' value={patient.dateOfBirth}/>
             </Div>
             <Div className='col-12 mt-2'>
                 <But>Add Medicine History</But>
@@ -150,7 +240,7 @@ const AppointmentDetail = () => {
             </Div>
             </Div>
             <Div className='col-2'>
-              <Img src='' width='150' height='150'/>
+              <Img src='' width='120' height='150'/>
             </Div>
             </Div>
              <Div className='col-12 mt-2'>
@@ -161,7 +251,7 @@ const AppointmentDetail = () => {
               <Input type="text" className='form-control' style={{marginTop:'35px'}} placeholder="Search..."/>
               </Div>
               <Div className='col-3 mt-3'>
-              <But>Start Procedure</But>
+              <But onClick={()=>setIsOpen(true)}>Start Procedure</But>
               </Div>
             </Div>
             <Table className='table table-hover mt-4'>
@@ -178,59 +268,46 @@ const AppointmentDetail = () => {
             </Tr>
             </Thead>
             <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>T-0001</Td>
-              <Td><Badge>Ongoing</Badge></Td>
-              <Td>Test Dr.1</Td>
-              <Td>3 Times</Td>
-              <Td>100000</Td>
-              <Td>50000</Td>
-              <Td><Btn>Payment</Btn></Td>
-            </Tr>
-            <tr>
-                <td colspan="10">
-                  <div>
-                    <table className="table bg-light">
-                      <tbody>
-                      <tr className="text-center">
-                          <th>First Appointment</th>
-                          <th><Badge>Done</Badge></th>
-                          <th>Date/Time</th>
-                          <th>No History</th>
-                          <th>Medicine Sale Amount</th>
-                          <th>Appointment Status</th>
-                          <th>Action</th>
-                      </tr>
-                      <tr className="text-center">
-                          <th>Seecond Appointment</th>
-                          <th><Badge>Done</Badge></th>
-                          <th>Date/Time</th>
-                          <th>No History</th>
-                          <th>Medicine Sale Amount</th>
-                          <th>Appointment Status</th>
-                          <th>Action</th>
-                      </tr>
-                      <tr className="text-center">
-                          <th>Third Appointment</th>
-                          <th><Badge>Done</Badge></th>
-                          <th>Date/Time</th>
-                          <th>No History</th>
-                          <th>Medicine Sale Amount</th>
-                          <th>Appointment Status</th>
-                          <th>Action</th>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
+              {selections.map((treat,i)=>(
+                <> 
+                <Tr key={treat._id}>
+                <Td>{++i}</Td>
+                <Td>{treat.relatedTreatment}</Td>
+                <Td><Badge>Ongoing</Badge></Td>
+                <Td>Test Dr.1</Td>
+                <Td>3 Times</Td>
+                <Td>{treat.totalAmount}</Td>
+                <Td>{treat.leftOverAmount}</Td>
+                <Td><Link to={'/payment/'+treat._id}><Btn>Payment</Btn></Link></Td>
+              </Tr>
+              <tr>
+                  <td colspan="10">
+                    <div>
+                      <table className="table bg-light">
+                        <tbody>
+                        {treat.relatedAppointments.map((app,index)=>(<tr className="text-center">
+                            <th>{app}</th>
+                            <th><Badge>Done</Badge></th>
+                            <th>Date/Time</th>
+                            <th>No History</th>
+                            <th>Medicine Sale Amount</th>
+                            <th>Appointment Status</th>
+                            <th>Action</th>
+                        </tr>))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
               </tr>
+              </>
+              ))}
+            
             </Tbody>
           </Table>
           <Top style={{marginTop:'60px'}}>
           <Right>
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-          <Button>Medicine Sale</Button>
+          <Link to='/medicine_sale'><Button>Medicine Sale</Button></Link>
           <Button>Add Treatment History</Button>
           <Button>Item Adjustment</Button>
           <Button>Done</Button>
@@ -238,55 +315,62 @@ const AppointmentDetail = () => {
           </Right>
           </Top >
             </Div> 
-            <Div className='col-3'>
+            {isopen && <Div className='col-3'>
               <Div className='card'>
                 <Div className='card-body row'>
                   <Title>Treatment</Title>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Treatment Name<Span>*</Span></Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>getTreatmentCode(e.target.value)}>
                 <Option>Select Treatment Name</Option>
-                <Option value="1">Treatment 1</Option>
-                <Option value="2">Treatment 2</Option>
+                {treatments.map((treatment,i)=>(
+                <Option value={treatment._id}>{treatment.treatmentName}</Option>
+                ))}
                 </Select>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Treatment Code<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={treatmentCode}/>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Payment Method<Span>*</Span></Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>getPaymentMethod(e.target.value)}>
                 <Option>Select Payment Method</Option>
-                <Option value="1">Credit</Option>
-                <Option value="2">Cash Down</Option>
+                <Option value="Credit">Credit</Option>
+                <Option value="Cash">Cash</Option>
+                <Option value='Bank'>Bank</Option>
                 </Select>
                 </Div>
-                <Div className='col-12 mt-2 form-group '>
+                {isCash && <Div className='col-12 mt-2 form-group'>
                 <Label>Bank Information<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
-                </Div>
+                <Select className='form-control' onChange={(e)=>setBankAcc(e.target.value)}>
+                <Option>Select Account</Option>
+                {accounts.map((account,i)=>(
+                <Option value={account._id}>{account.name}</Option>
+                ))}
+                </Select>
+                </Div>}
                 <Div className='col-12 mt-2 form-group '>
-                <Label>Pay Amount<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Label>Paid Amount<Span>*</Span></Label>
+                <Input type="number" className='form-control' id='paid' onChange={(e)=>setLeftAmount(totalAmount-e.target.value)}/>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Left-Over Amount<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' value={leftAmount}/>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Total Amount<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' value={totalAmount}/>
                 </Div>
                 <Div className='col-6 mt-3'>
-                <But>Submit</But>
+                <But onClick={storeTreatmentSelection}>Submit</But>
                 </Div>
                 <Div className='col-6 mt-3'>
-                <But>Cancel</But>
+                <But onClick={()=>setIsOpen(false)}>Cancel</But>
                 </Div>
                 </Div>
               </Div>
-            </Div>
+            </Div>}
             
           <Top>
             {/* <Center>
