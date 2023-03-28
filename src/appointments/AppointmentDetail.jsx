@@ -116,6 +116,7 @@ const AppointmentDetail = () => {
   const [treatmentCode,setTreatmentCode] = useState('');
   const [treatmentId,setTreatmentId] = useState('');
   const [totalAmount,setTotalAmount] = useState('');
+  const [treatmentName,setTreatmentName] = useState('');
   const [method,setMethod] = useState('');
   const [bankacc,setBankAcc] = useState('');
   const appointmentid = useLocation().pathname.split("/")[2];
@@ -143,6 +144,7 @@ const AppointmentDetail = () => {
     const res = await axios.get('http://localhost:9000/api/appointment/'+appointmentid);
     setPatient(res.data.data[0].relatedPatient);
     setDoctor(res.data.data[0].relatedDoctor);
+    // setTreatmentName(res.data.treatment[0])
     // res.data.data[0].relatedTreatmentSelection.map((el)=>{
     //   selections.push(el);
     // })
@@ -151,10 +153,7 @@ const AppointmentDetail = () => {
       var findItem = selections.find((x) => x._id === item._id);
       if (!findItem) selections.push(item);
     });
-  
-    console.log('hello');
-    console.log(res.data.data[0].relatedTreatmentSelection.length);
-    console.log(selections);
+        
   }
   const getTreatmentCode = async (id) => {
     const res = await axios.get('http://localhost:9000/api/treatment/'+id);
@@ -279,7 +278,7 @@ const AppointmentDetail = () => {
                 <Td>{treat.relatedAppointments.length}Times</Td>
                 <Td>{treat.totalAmount}</Td>
                 <Td>{treat.leftOverAmount}</Td>
-                <Td><Link to={'/payment/'+treat._id}><Btn>Payment</Btn></Link></Td>
+                <Td><Link to={'/single_payment/'+patient._id}><Btn>Payment</Btn></Link></Td>
               </Tr>
               <tr>
                   <td colspan="10">
@@ -295,6 +294,17 @@ const AppointmentDetail = () => {
                             <th>Appointment Status</th>
                             <th>Action</th>
                         </tr>))}
+                        <tr>
+                          <td colSpan='1'></td>
+                          <td colSpan='6'>
+                          <ButtonGroup variant="outlined" aria-label="outlined button group">
+                            <Link to={'/medicine_sale/'+appointmentid+'/'+treat.relatedTreatment}><Button>Medicine Sale</Button></Link>
+                            <Button>Add Treatment History</Button>
+                            <Button>Item Adjustment</Button>
+                            <Button>Done</Button>
+                            </ButtonGroup>
+                          </td>
+                        </tr>
                         </tbody>
                       </table>
                     </div>
@@ -305,16 +315,7 @@ const AppointmentDetail = () => {
             
             </Tbody>
           </Table>
-          <Top style={{marginTop:'60px'}}>
-          <Right>
-          <ButtonGroup variant="outlined" aria-label="outlined button group">
-          <Link to='/medicine_sale'><Button>Medicine Sale</Button></Link>
-          <Button>Add Treatment History</Button>
-          <Button>Item Adjustment</Button>
-          <Button>Done</Button>
-          </ButtonGroup>
-          </Right>
-          </Top >
+          
             </Div> 
             {isopen && <Div className='col-3'>
               <Div className='card'>

@@ -12,6 +12,7 @@ import PatientCredit from './patients/PatientCredit';
 import Sidebar from './components/Sidebar';
 import MedicineSale from './pages/MedicineSale'
 import Payment from './appointments/Payment'
+import Payments from  './reports/Payments'
 
 function App() {
   return (
@@ -26,8 +27,9 @@ function App() {
         <Route path='/patient/member' element={<Member />} />
         <Route path='/patient/credit_list' element={<PatientCredit />} />
         <Route path='/treatment/create' element={<TreatmentCreate/>} />
-        <Route path='/medicine_sale' element={<MedicineSale />} />
-        <Route path='/payment/:id' element={<Payment />} />
+        <Route path='/medicine_sale/:aid/:tid' element={<MedicineSale />} />
+        <Route path='/single_payment/:id' element={<Payment />} />
+        <Route path='/reports/payment'element={<Payments/>} />
       </Routes>
       </Sidebar>
   );

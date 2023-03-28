@@ -73,6 +73,19 @@ const routes= [
             },
         ],
     },
+    {
+        path : '/report',
+        name : 'Report', 
+        icon : <MdHome/>,
+        subRoutes : [
+            {
+                path : '/reports/payment',
+                name : 'Payment List', 
+                icon : <FaListUl/>   ,
+            },
+            
+        ],
+    },
 ]
 
 const Sidebar = ({children}) => {

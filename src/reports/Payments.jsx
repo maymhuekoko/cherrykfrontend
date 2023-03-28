@@ -16,7 +16,6 @@ border-radius:4px;
 `
 const Payment = () => {
   const [isShow,setIsShow] = useState(false);
-  const patient_id = useLocation().pathname.split('/')[2];
   const [selection,setSelection] = useState([]);
   const [selectiondone,setSelectionDone] = useState([]);
   const [repayment,setRepayment] = useState([]);
@@ -33,8 +32,8 @@ const Payment = () => {
   const getSelection = async () =>{
     const res =await axios.get('http://localhost:9000/api/patient-treatments');
     console.log(res.data.data);
-    const filter = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount != 0);
-    const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
+    const filter = res.data.list.filter((el)=> el.leftOverAmount != 0);
+    const filterd = res.data.list.filter((el)=> el.leftOverAmount == 0);
     setSelection(filter);
     setSelectionDone(filterd);
   }

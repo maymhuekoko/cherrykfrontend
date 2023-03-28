@@ -1,7 +1,8 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import ReactBigCalendar from './ReactBigCalendar';
+import axios from 'axios';
 
 const Left = styled.div`
 font-weight : normal;
@@ -50,6 +51,25 @@ const Option = styled.option`
 `
 
 const AppointmentCreate = () => {
+    const [doctors,setDoctors] = useState([]);
+    const [patientName,setPatientName] = useState('');
+    const [patientStatus,setPatientStatus] = useState('');
+    const [patientPhone,setPatientPhone] = useState('');
+    const [doctorId,setDoctorId] = useState('');
+    const [description,setDescription] = useState('');
+    const [date,setDate] = useState('');
+    const [time,setTime] = useState('');
+
+    useEffect(()=>{
+        getDoctors();
+    },[])
+    const getDoctors = async () => {
+        const res = await axios.get('http://localhost:9000/api/doctors');
+        setDoctors(res.data.data);
+    }
+    const saveAppointment = () => {
+        // axios.post('http://localhost:9000/api/appointment',data)
+    }
   return (
     <div>
         <Nav/>
@@ -59,43 +79,46 @@ const AppointmentCreate = () => {
           <Div className='card-body'>
             <Div className='form-group'>
                 <Label>Select Patient Status</Label>
-                <Select className='form-control'>
+                <Select className='form-control' value={(e)=>setPatientStatus(e.target.value)}>
                     <Option>Select Status</Option>
-                    <Option>New</Option>
-                    <Option>Old</Option>
+                    <Option value='New'>New</Option>
+                    <Option value='Old'>Old</Option>
                 </Select>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Patient Name</Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' value={(e)=>setPatientName(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Phone</Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' value={(e)=>setPatientPhone(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Doctor Name</Label>
-                <Select className='form-control'>
+                <Select className='form-control' value={(e)=>setDoctorId(e.target.value)}>
                     <Option>Select Doctor</Option>
-                    <Option>Test Dr. 1</Option>
-                    <Option>Test Dr. 2</Option>
+                    {
+                        doctors.map((doctor,i)=>(
+                            <Option value={doctor._id}>{doctor.name}</Option>
+                        ))
+                    }
                 </Select>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Description</Label>
-                <Textarea className='form-control'/>
+                <Textarea className='form-control' value={(e)=>setDescription(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Date</Label>
-                <Input type="date" className='form-control'/>
+                <Input type="date" className='form-control' value={(e)=>setDate(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Time</Label>
-                <Input type="time" className='form-control'/>
+                <Input type="time" className='form-control' value={(e)=>setTime(e.target.value)}/>
             </Div>
             <Top>
             <Center>
-                <Button>Register</Button>
+                <Button onClick={saveAppointment}>Register</Button>
             </Center>
             </Top>
           </Div>
