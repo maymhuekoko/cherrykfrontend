@@ -59,14 +59,22 @@ const AppointmentCreate = () => {
     const [description,setDescription] = useState('');
     const [date,setDate] = useState('');
     const [time,setTime] = useState('');
+    const [patients,setPatients] = useState([]);
 
     useEffect(()=>{
         getDoctors();
+        getPatients();
     },[])
     const getDoctors = async () => {
         const res = await axios.get('http://localhost:9000/api/doctors');
         setDoctors(res.data.data);
     }
+    const getPatients = async () =>{
+        try{
+          const res = await axios.get('http://localhost:9000/api/patients');
+          setPatients(res.data.list);
+        }catch(err){}
+      };
     const saveAppointment = () => {
         // axios.post('http://localhost:9000/api/appointment',data)
     }
@@ -79,11 +87,26 @@ const AppointmentCreate = () => {
           <Div className='card-body'>
             <Div className='form-group'>
                 <Label>Select Patient Status</Label>
-                <Select className='form-control' value={(e)=>setPatientStatus(e.target.value)}>
+                <Select className='form-control' value={(e)=>{setPatientStatus(e.target.value);}}>
                     <Option>Select Status</Option>
                     <Option value='New'>New</Option>
                     <Option value='Old'>Old</Option>
                 </Select>
+            </Div>
+            <Div className='form-group mt-3'>
+                <Label>Patient Name</Label>
+                <Select className='form-control' value={(e)=>setDoctorId(e.target.value)}>
+                    <Option>Select Patient</Option>
+                    {
+                        patients.map((patient,i)=>(
+                            <Option value={patient._id}>{patient.name}</Option>
+                        ))
+                    }
+                </Select>
+            </Div>
+            <Div className='form-group mt-3'>
+                <Label>Phone</Label>
+                <Input type="number" className='form-control'/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Patient Name</Label>
