@@ -99,24 +99,26 @@ const Patient = () => {
       }
   }
 
+  const show = () => setIsOpen(!isOpen);
+
   return (
     <div>
         <Nav/>
         <Top>
           <Left><Title>Patient List</Title></Left>
           <Right><Button><AiOutlinePlus style={{marginRight:'7px'}}/>Patient Register</Button></Right>
-         </Top>
+        </Top>
          <Div className='card'>
           <Div className='card-body'>
           <Top>
           <Left><Input type="text" placeholder="Search..."/></Left>
           <Right>
-            <Select onChange={(e)=>genderfilter(e.target.value)}>
+            {isOpen && <Select onChange={(e)=>genderfilter(e.target.value)}>
               <Option>Gender</Option>
               <Option value="1">Male</Option>
               <Option value="2">Female</Option>
-            </Select>
-            <Btn className='btn btn-outline-primary'><AiTwotoneFilter/></Btn>
+            </Select>}
+            <Btn className='btn btn-outline-primary'><AiTwotoneFilter onClick={show}/></Btn>
             <Btn className='btn btn-outline-success'><FaFileExport/></Btn>
           </Right>
          </Top>
