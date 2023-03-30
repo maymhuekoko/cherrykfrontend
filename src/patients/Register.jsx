@@ -1,6 +1,7 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Nav from "../components/Navbar"
 import styled from 'styled-components'
+import axios from 'axios'
 
 const Top = styled.div`
 display : flex;
@@ -55,6 +56,28 @@ const DivF = styled.div`
 `
 
 const Register = () => {
+  const [name,setName] = useState('');
+  const [email,setEmail] = useState('');
+  const [age,setAge] = useState('');
+  const [gender,setGender] = useState('');
+  const [phone,setPhone] = useState('');
+  const [dob,setDob] = useState('');
+  const [address,setAddress] = useState('');
+  const [occupation,setOccupation] = useState('');
+  const [img,setImg] = useState('');
+
+  const patientCreate = () => {
+    const data = {name: name,email: email,age:age,phone:phone,dateOfBirth:dob,address:address,
+                  occupation: occupation,img:img,gender:gender,
+                 }
+      const config = {
+          headers: {"Content-Type": "multipart/form-data"}
+      }
+      const res = axios.post('http://localhost:9000/api/patient', data, config)
+     .then(function (response) {
+      alert('success')
+     })
+  }
   return (
     <div>
         <Nav/>
@@ -64,57 +87,57 @@ const Register = () => {
           <Div className='row'>
             <Div className='offset-2 col-4 form-group '>
                 <Label>Name<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setName(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group'>
                 <Label>Email</Label>
-                <Input type="text" className='form-control'/>
+                <Input type="email" className='form-control' onChange={(e)=>setEmail(e.target.value)}/>
             </Div>
           </Div>
           <Div className='row mt-3'>
           <Div className='offset-2 col-4 form-group'>
                 <Label>Phone<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setPhone(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group'>
                 <Label>Date of Birth<Span>*</Span></Label>
-                <Input type="date" className='form-control'/>
+                <Input type="date" className='form-control' onChange={(e)=>setDob(e.target.value)}/>
             </Div>
           </Div>
           <Div className='row mt-3'>
           <Div className='offset-2 col-4 form-group'>
                 <Label>Age<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' onChange={(e)=>setAge(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group'>
                 <Label>Gender<Span>*</Span></Label>
                 <DivF>
-                Male<Input  type="radio" name="genderdata"/>
-                Female<Input  type="radio" name="genderdata"/>
+                Male<Input  type="radio" name="genderdata" id='male' onClick={(e)=>e.target.checked ? setGender('Male'):''}/>
+                Female<Input  type="radio" name="genderdata" id='female' onClick={(e)=>e.target.checked ? setGender('Female'):''}/>
                 </DivF>
             </Div>
           </Div>
           <Div className='row mt-3'>
             <Div className='offset-2 col-8 form-group'>
                 <Label>Occupation</Label>
-                <Input type="number" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setOccupation(e.target.value)}/>
             </Div>
           </Div>
           <Div className='row mt-3'>
             <Div className='offset-2 col-8 form-group'>
                 <Label>Address<Span>*</Span></Label>
-                <Textarea className='form-control'/>
+                <Textarea className='form-control' onChange={(e)=>setAddress(e.target.value)}/>
             </Div>
           </Div>
           <Div className='row mt-3'>
             <Div className='offset-2 col-8 form-group'>
                 <Label>Photo</Label>
-                <Input type="file" className='form-control'/>
+                <Input type="file" className='form-control' onChange={(e)=>setImg(e.target.files[0])}/>
             </Div>
           </Div>
           <Top>
             <Center>
-                <Button>Register</Button>
+                <Button onClick={patientCreate}>Register</Button>
             </Center>
           </Top>
           </Div>
