@@ -55,11 +55,13 @@ const AppointmentCreate = () => {
     const [patientName,setPatientName] = useState('');
     const [patientStatus,setPatientStatus] = useState('');
     const [patientPhone,setPatientPhone] = useState('');
+    const [patientEmail,setPatientEmail] = useState('');
     const [doctorId,setDoctorId] = useState('');
     const [description,setDescription] = useState('');
     const [date,setDate] = useState('');
     const [time,setTime] = useState('');
     const [patients,setPatients] = useState([]);
+
 
     useEffect(()=>{
         getDoctors();
@@ -75,8 +77,47 @@ const AppointmentCreate = () => {
           setPatients(res.data.list);
         }catch(err){}
       };
+    
+    const getPatientPhone = async (id) =>{
+        try{
+            setPatientName(id);
+            const res = await axios.get('http://localhost:9000/api/patient/'+id);
+            setPatientPhone(res.data.data.phone);
+            setPatientEmail(res.data.data.email);
+          }catch(err){}
+    }
+    
     const saveAppointment = () => {
-        // axios.post('http://localhost:9000/api/appointment',data)
+      if(patientStatus == 'Old'){
+        const data = { 
+        relatedDoctor:doctorId,
+        date: date,
+        time: time,
+        description:description,
+        status:patientStatus,
+        relatedPatient:patientName,
+        }
+        axios.post('http://localhost:9000/api/appointment',data)
+        .then(function (response) {
+            alert('success')
+        })
+      }else{
+        const data = {
+            relatedDoctor:doctorId,
+            date: date,
+            time: time,
+            phone:patientPhone,
+            description:description,
+            name:patientName,
+            status:patientStatus,
+            email:patientEmail}
+        axios.post('http://localhost:9000/api/appointment',data)
+        .then(function (response) {
+            alert('success')
+        })
+      }
+        
+      
     }
   return (
     <div>
@@ -87,15 +128,16 @@ const AppointmentCreate = () => {
           <Div className='card-body'>
             <Div className='form-group'>
                 <Label>Select Patient Status</Label>
-                <Select className='form-control' value={(e)=>{setPatientStatus(e.target.value);}}>
+                <Select className='form-control' onChange={(e)=>setPatientStatus(e.target.value)}>
                     <Option>Select Status</Option>
                     <Option value='New'>New</Option>
                     <Option value='Old'>Old</Option>
                 </Select>
             </Div>
+            {patientStatus == 'Old' && <>
             <Div className='form-group mt-3'>
                 <Label>Patient Name</Label>
-                <Select className='form-control' value={(e)=>setDoctorId(e.target.value)}>
+                <Select className='form-control' onChange={(e)=>getPatientPhone(e.target.value)}>
                     <Option>Select Patient</Option>
                     {
                         patients.map((patient,i)=>(
@@ -106,19 +148,28 @@ const AppointmentCreate = () => {
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Phone</Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' value={patientPhone}/>
             </Div>
             <Div className='form-group mt-3'>
+                <Label>Email</Label>
+                <Input type="email" className='form-control' value={patientEmail}/>
+            </Div></>}
+            {patientStatus == 'New' && <>
+            <Div className='form-group mt-3'>
                 <Label>Patient Name</Label>
-                <Input type="text" className='form-control' value={(e)=>setPatientName(e.target.value)}/>
+                <Input type="text" className='form-control' onChange={(e)=>setPatientName(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Phone</Label>
-                <Input type="number" className='form-control' value={(e)=>setPatientPhone(e.target.value)}/>
+                <Input type="number" className='form-control' onChange={(e)=>setPatientPhone(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
+                <Label>Email</Label>
+                <Input type="number" className='form-control' onChange={(e)=>setPatientEmail(e.target.value)}/>
+            </Div></>}
+            <Div className='form-group mt-3'>
                 <Label>Doctor Name</Label>
-                <Select className='form-control' value={(e)=>setDoctorId(e.target.value)}>
+                <Select className='form-control' onChange={(e)=>setDoctorId(e.target.value)}>
                     <Option>Select Doctor</Option>
                     {
                         doctors.map((doctor,i)=>(
@@ -129,15 +180,15 @@ const AppointmentCreate = () => {
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Description</Label>
-                <Textarea className='form-control' value={(e)=>setDescription(e.target.value)}/>
+                <Textarea className='form-control' onChange={(e)=>setDescription(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Date</Label>
-                <Input type="date" className='form-control' value={(e)=>setDate(e.target.value)}/>
+                <Input type="date" className='form-control' onChange={(e)=>setDate(e.target.value)}/>
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Time</Label>
-                <Input type="time" className='form-control' value={(e)=>setTime(e.target.value)}/>
+                <Input type="time" className='form-control' onChange={(e)=>setTime(e.target.value)}/>
             </Div>
             <Top>
             <Center>

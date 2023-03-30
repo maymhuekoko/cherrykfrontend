@@ -39,7 +39,7 @@ const Payment = () => {
   }
   const getRepayment = async () => {
     const res =await axios.get('http://localhost:9000/api/repayments');
-    console.log(res.data.list);
+    console.log(res.data.list[0].relatedPateintTreatment._id);
     setRepayment(res.data.list)
   }
 
@@ -136,7 +136,7 @@ const Payment = () => {
                   </thead>
                   <tbody>
                   {
-                    repayment.map((repay,i)=>{
+                    repayment.map((repay,i)=>(
                       repay.relatedPateintTreatment._id == select._id && 
                       <tr>
                         <td>{++i}</td>
@@ -144,7 +144,7 @@ const Payment = () => {
                         <td>{repay.repaymentAmount}</td>
                         <td>{repay.description}</td>
                       </tr>
-                    })
+                    ))
                   }
                   </tbody>
                   </table>
@@ -198,7 +198,7 @@ const Payment = () => {
                   </thead>
                   <tbody>
                   {
-                    repayment.map((repay,i)=>{
+                    repayment.map((repay,i)=>(
                       repay.relatedPateintTreatment._id == selectd._id && 
                       <tr>
                         <td>{++i}</td>
@@ -206,7 +206,7 @@ const Payment = () => {
                         <td>{repay.repaymentAmount}</td>
                         <td>{repay.description}</td>
                       </tr>
-                    })
+                    ))
                   }
                   </tbody>
                   </table>

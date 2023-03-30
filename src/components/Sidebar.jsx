@@ -2,6 +2,7 @@ import React from 'react'
 import {AnimatePresence, motion} from 'framer-motion';
 import {FaHome,FaClock,FaUserInjured,FaBars,FaSearch, FaAngleDown,FaListUl,FaRegRegistered,FaCreditCard} from 'react-icons/fa';
 import {MdOutlineCardMembership,MdCreate,MdHome} from 'react-icons/md'
+import {GoReport} from 'react-icons/go'
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import SidebarMenu from './SidebarMenu';
@@ -57,10 +58,38 @@ const routes= [
         ],
     },
     {
+        path : '/report',
+        name : 'Report', 
+        icon : <GoReport/>,
+        subRoutes : [
+            {
+                path : '/reports/payment',
+                name : 'Payment List', 
+                icon : <FaListUl/>   ,
+            },
+            
+        ],
+    },
+    {
         path : '/master',
         name : 'Master', 
         icon : <MdHome/>,
         subRoutes : [
+            {
+                path : '/category',
+                name : 'Category List', 
+                icon : <FaListUl/>   ,
+            },
+            {
+                path : '/subcategory',
+                name : 'SubCategory List', 
+                icon : <FaListUl/>   ,
+            },
+            {
+                path : '/brand',
+                name : 'Brand List', 
+                icon : <FaListUl/>   ,
+            },
             {
                 path : '/treatment/list',
                 name : 'Treatment List', 
@@ -73,19 +102,7 @@ const routes= [
             },
         ],
     },
-    {
-        path : '/report',
-        name : 'Report', 
-        icon : <MdHome/>,
-        subRoutes : [
-            {
-                path : '/reports/payment',
-                name : 'Payment List', 
-                icon : <FaListUl/>   ,
-            },
-            
-        ],
-    },
+    
 ]
 
 const Sidebar = ({children}) => {

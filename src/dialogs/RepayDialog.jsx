@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,8 +24,8 @@ const RepayDialog = (props) => {
     repaymentAmount:amount}
     axios.post('http://localhost:9000/api/repayment',data)
     .then(function (response) {
-      alert('success')
       setIsShow(false);
+      window.location.reload(true);
      })
   }
   

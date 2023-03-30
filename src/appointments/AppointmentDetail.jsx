@@ -166,6 +166,7 @@ const AppointmentDetail = () => {
     if(val == 'Credit'){
      document.getElementById('paid').value = 0;
      setLeftAmount(totalAmount);
+     setIsCash(false);
     }else{
       if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.code == 'MC-1'))}
       if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.accountingTypes == "Current Assets" && el.code != 'MC-1'))}
@@ -185,11 +186,23 @@ const AppointmentDetail = () => {
     const res = axios.post('http://localhost:9000/api/treatment-selection',data)
      .then(function (response) {
          console.log('success');
-         setTotalAmount(0);
-         setLeftAmount(0);
-         document.getElementById('paid').value = 0;
-         setIsOpen(false);
-         getpatient();
+         const data1 = {
+          relatedPatient:patient._id,
+          relatedTreatment: treatmentId,
+          leftOverAmount:leftAmount,
+          paidAmount:paid,
+          relatedTreatmentSelection:response.data.data._id,
+          fullyPaid:true,
+          }
+          const res = axios.post('http://localhost:9000/api/patient-treatment',data1)
+          .then(function (response) {
+            alert('successs');setTotalAmount(0);
+            setLeftAmount(0);
+            document.getElementById('paid').value = 0;
+            setIsOpen(false);
+            getpatient();
+          })
+         
      })
   }
   return (

@@ -13,6 +13,9 @@ import Sidebar from './components/Sidebar';
 import MedicineSale from './pages/MedicineSale'
 import Payment from './appointments/Payment'
 import Payments from  './reports/Payments'
+import Category from './master/datas/Category';
+import SubCategory from './master/datas/SubCategory';
+import Brand from './master/datas/Brand';
 
 function App() {
   return (
@@ -29,7 +32,10 @@ function App() {
         <Route path='/treatment/create' element={<TreatmentCreate/>} />
         <Route path='/medicine_sale/:aid/:tid' element={<MedicineSale />} />
         <Route path='/single_payment/:id' element={<Payment />} />
-        <Route path='/reports/payment'element={<Payments/>} />
+        <Route path='/reports/payment' element={<Payments/>} />
+        <Route path='/category' element={<Category/>} />
+        <Route path='/subcategory' element={<SubCategory/>} />
+        <Route path='/brand' element={<Brand/>} />
       </Routes>
       </Sidebar>
   );
