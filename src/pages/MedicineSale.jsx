@@ -80,19 +80,21 @@ const MedicineSale = () => {
   const [payamount,setPayamount] = useState(0);
   const [method,setMethod] = useState('');
   const [bankinfo,setBankInfo] = useState('');
+  const url =  useSelector(state=>state.auth.url);
   const dispatch = useDispatch();
   const appointment_id = useLocation().pathname.split('/')[2];  
   const treatment_id = useLocation().pathname.split('/')[3];  
+  
   useEffect(()=> {
     const getMedicines = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/medicine-items');
+        const res = await axios.get(url+'api/medicine-items');
         setMedicines(res.data.list);
       }catch(err){}
     };
     const getTreatments = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/treatment/'+treatment_id);
+        const res = await axios.get(url+'api/treatment/'+treatment_id);
         setTreatments(res.data.data[0]);
         setTname(res.data.data[0].relatedPatient.name);
         setTphone(res.data.data[0].relatedPatient.phone);
@@ -101,7 +103,7 @@ const MedicineSale = () => {
     };
     const getBanks = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/banks');
+        const res = await axios.get(url+'api/banks');
         console.log(res.data.list);
         setBanks(res.data.list);
       }catch(err){}
@@ -113,7 +115,7 @@ const MedicineSale = () => {
 
   const addcart = async (val) =>{
     try{
-      const response = await axios.get('http://localhost:9000/api/medicine-item/'+val);
+      const response = await axios.get(url+'api/medicine-item/'+val);
       console.log(response.data.data[0].name.name);
       const cart = {id:response.data.data[0]._id,name:response.data.data[0].name.name,qty:1,unit_price:response.data.data[0].sellingPrice,amount:response.data.data[0].sellingPrice}
       dispatch(addCart(cart));
@@ -135,7 +137,7 @@ const MedicineSale = () => {
     grandTotal:grandtotal,
     medicineItems:carts,
     }
-    const res = axios.post('http://localhost:9000/api/medicine-sale',data)
+    const res = axios.post(url+'api/medicine-sale',data)
      .then(function (response) {
       alert('success')
      })
@@ -205,7 +207,7 @@ const MedicineSale = () => {
               <Label>Total</Label>
             </Div>
             <Div className='col-7'>
-              <input type='number' placeholder='Amount' style={{width:'163px'}} value={total} readOnly/>
+              <input type='number' placeholder='Amount' style={{width:'137px'}} value={total} readOnly/>
             </Div>
             </Div>
             <Div className='row mt-3'>
@@ -213,7 +215,7 @@ const MedicineSale = () => {
               <Label>Discount</Label>
             </Div>
             <Div className='col-7'>
-              <input type='number' placeholder='Amount' style={{width:'163px'}} value='0'/>
+              <input type='number' placeholder='Amount' style={{width:'137px'}} value='0'/>
             </Div>
             </Div>
             <Div className='row mt-3'>
@@ -221,7 +223,7 @@ const MedicineSale = () => {
               <Label>Grand Total</Label>
             </Div>
             <Div className='col-7'>
-              <input type='number' placeholder='Amount' style={{width:'163px'}} value={grandtotal} readOnly/>
+              <input type='number' placeholder='Amount' style={{width:'137px'}} value={grandtotal} readOnly/>
             </Div>
             </Div>
             <Div className='row mt-3'>
@@ -229,7 +231,7 @@ const MedicineSale = () => {
               <Label>Pay Amount</Label>
             </Div>
             <Div className='col-7'>
-              <input type='number' placeholder='Amount' style={{width:'163px'}} onChange={(e)=>{setChange(e.target.value - grandtotal);setPayamount(e.target.value);}}/>
+              <input type='number' placeholder='Amount' style={{width:'137px'}} onChange={(e)=>{setChange(e.target.value - grandtotal);setPayamount(e.target.value);}}/>
             </Div>
             </Div>
             <Div className='row mt-3'>
@@ -237,7 +239,7 @@ const MedicineSale = () => {
               <Label>Change</Label>
             </Div>
             <Div className='col-7'>
-              <input type='number' placeholder='Amount' style={{width:'163px'}} value={change} readOnly/>
+              <input type='number' placeholder='Amount' style={{width:'137px'}} value={change} readOnly/>
             </Div>
             </Div>
             <hr/>
@@ -246,7 +248,7 @@ const MedicineSale = () => {
               <Label>Payment</Label>
             </Div>
             <Div className='col-7'>
-              <select style={{width:'163px'}} onChange={(e)=>setMethod(e.target.value)}>
+              <select style={{width:'137px'}} onChange={(e)=>setMethod(e.target.value)}>
                 <option>Choose Method</option>
                 <option value="Cash Down">Cash Down</option>
                 <option value='Bank'>Bank Transaction</option>
@@ -258,7 +260,7 @@ const MedicineSale = () => {
               <Label>Bank Info</Label>
             </Div>
             <Div className='col-7'>
-              <select style={{width:'163px'}} onChange={(e)=>setBankInfo(e.target.value)}>
+              <select style={{width:'137px'}} onChange={(e)=>setBankInfo(e.target.value)}>
                 <option>Choose Bank</option>
                 {banks.map((bank,i)=>(
                 <option value={bank._id}>{bank.bankName}</option>

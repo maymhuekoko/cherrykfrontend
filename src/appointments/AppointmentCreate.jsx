@@ -3,6 +3,7 @@ import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import ReactBigCalendar from './ReactBigCalendar';
 import axios from 'axios';
+import { useSelector} from 'react-redux';
 
 const Left = styled.div`
 font-weight : normal;
@@ -61,6 +62,7 @@ const AppointmentCreate = () => {
     const [date,setDate] = useState('');
     const [time,setTime] = useState('');
     const [patients,setPatients] = useState([]);
+    const url =  useSelector(state=>state.auth.url);
 
 
     useEffect(()=>{
@@ -68,12 +70,12 @@ const AppointmentCreate = () => {
         getPatients();
     },[])
     const getDoctors = async () => {
-        const res = await axios.get('http://localhost:9000/api/doctors');
+        const res = await axios.get(url+'api/doctors');
         setDoctors(res.data.data);
     }
     const getPatients = async () =>{
         try{
-          const res = await axios.get('http://localhost:9000/api/patients');
+          const res = await axios.get(url+'api/patients');
           setPatients(res.data.list);
         }catch(err){}
       };
@@ -81,7 +83,7 @@ const AppointmentCreate = () => {
     const getPatientPhone = async (id) =>{
         try{
             setPatientName(id);
-            const res = await axios.get('http://localhost:9000/api/patient/'+id);
+            const res = await axios.get(url+'api/patient/'+id);
             setPatientPhone(res.data.data.phone);
             setPatientEmail(res.data.data.email);
           }catch(err){}
@@ -97,7 +99,7 @@ const AppointmentCreate = () => {
         status:patientStatus,
         relatedPatient:patientName,
         }
-        axios.post('http://localhost:9000/api/appointment',data)
+        axios.post(url+'api/appointment',data)
         .then(function (response) {
             alert('success')
         })
@@ -111,7 +113,7 @@ const AppointmentCreate = () => {
             name:patientName,
             status:patientStatus,
             email:patientEmail}
-        axios.post('http://localhost:9000/api/appointment',data)
+        axios.post(url+'api/appointment',data)
         .then(function (response) {
             alert('success')
         })

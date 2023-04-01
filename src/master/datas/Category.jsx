@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 const Button = styled.button`
@@ -23,12 +24,13 @@ const Category = () => {
   const [categories,setCategories] = useState([]);
   const [edit,setEdit] = useState(false);
   const [id,setId] = useState('');
+  const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=>{
     getCategories();
   },[])
   const getCategories = async () =>{
-    const res = await axios.get('http://localhost:9000/api/categories');
+    const res = await axios.get(url+'api/categories');
     setCategories(res.data.data)
   }
   const create = () => {
@@ -37,13 +39,13 @@ const Category = () => {
       name:name, 
       description:description
     }
-    axios.post('http://localhost:9000/api/category',data)
+    axios.post(url+'api/category',data)
     .then(function (response){
       window.location.reload(true);
     })
   }
   const editt =async (id) =>{
-    const res =await axios.get('http://localhost:9000/api/category/'+id);
+    const res =await axios.get(url+'api/category/'+id);
     console.log(res.data.data[0])
     setCode(res.data.data[0].code);
     setName(res.data.data[0].name);
@@ -52,7 +54,7 @@ const Category = () => {
     setEdit(true);
   }
   const deletee = (id) => {
-    axios.delete('http://localhost:9000/api/category/'+id);
+    axios.delete(url+'api/category/'+id);
     window.location.reload(true);
   }
   const update = () =>{
@@ -62,7 +64,7 @@ const Category = () => {
       name:name, 
       description:description
     }
-    axios.put('http://localhost:9000/api/category',data)
+    axios.put(url+'api/category',data)
     .then(function (response){
       window.location.reload(true);
     })

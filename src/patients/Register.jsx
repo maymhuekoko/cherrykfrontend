@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const Top = styled.div`
 display : flex;
@@ -65,6 +66,7 @@ const Register = () => {
   const [address,setAddress] = useState('');
   const [occupation,setOccupation] = useState('');
   const [img,setImg] = useState('');
+  const url =  useSelector(state=>state.auth.url);
 
   const patientCreate = () => {
     const data = {name: name,email: email,age:age,phone:phone,dateOfBirth:dob,address:address,
@@ -73,7 +75,7 @@ const Register = () => {
       const config = {
           headers: {"Content-Type": "multipart/form-data"}
       }
-      const res = axios.post('http://localhost:9000/api/patient', data, config)
+      const res = axios.post(url+'api/patient', data, config)
      .then(function (response) {
       alert('success')
      })
