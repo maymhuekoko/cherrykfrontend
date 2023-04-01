@@ -1,6 +1,7 @@
 import './App.css';
 import { Routes,Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
+import Login from './pages/Login'
 import Appointment from './appointments/Appointment';
 import AppointmentCreate from './appointments/AppointmentCreate';
 import AppointmentDetail from './appointments/AppointmentDetail';
@@ -17,11 +18,13 @@ import Category from './master/datas/Category';
 import SubCategory from './master/datas/SubCategory';
 import Brand from './master/datas/Brand';
 
+
 function App() {
   return (
       <Sidebar>
       <Routes>
-        <Route path='/' element={<Dashboard />} />
+        <Route path='/' element={<Login />} />
+        <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/appointment/list' element={<Appointment />} />
         <Route path='/appointment/create' element={<AppointmentCreate />} />
         <Route path='/appointment/:id' element={<AppointmentDetail />} />
@@ -37,7 +40,7 @@ function App() {
         <Route path='/subcategory' element={<SubCategory/>} />
         <Route path='/brand' element={<Brand/>} />
       </Routes>
-      </Sidebar>
+      </Sidebar>  
   );
 }
 

@@ -7,12 +7,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import styled from 'styled-components';
 import axios from 'axios'
+import { useSelector} from 'react-redux';
 
 const RepayDialog = (props) => {
   const [amount,setAmount] = useState('')
   const [date,setDate] = useState('')
   const [description,setDescription] = useState('')
   const [isShow,setIsShow] = useState(true);
+  const url =  useSelector(state=>state.auth.url);
   console.log(props.credit);
 
   const save = () =>{
@@ -22,7 +24,7 @@ const RepayDialog = (props) => {
     relatedPateintTreatment:props.patientTreatmentId,
     repaymentDate:date,
     repaymentAmount:amount}
-    axios.post('http://localhost:9000/api/repayment',data)
+    axios.post(url+'api/repayment',data)
     .then(function (response) {
       setIsShow(false);
       window.location.reload(true);

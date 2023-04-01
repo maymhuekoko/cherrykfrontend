@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import {AiOutlinePlus,AiTwotoneFilter,AiFillInfoCircle} from 'react-icons/ai'
 import {FaFileExport} from "react-icons/fa"
 import axios from 'axios'
+import { useSelector} from 'react-redux';
 import { Link } from 'react-router-dom'
 
 const Top = styled.div`
@@ -77,11 +78,12 @@ border-radius:4px;
 
 const Appointment = () => {
   const [appointments,setAppointments] = useState([]);
+  const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=> {
     const getAppointments = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/Appointments');
+        const res = await axios.get(url+'api/Appointments');
         setAppointments(res.data.list);
       }catch(err){}
     };

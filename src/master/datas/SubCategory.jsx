@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
-
+import { useSelector } from 'react-redux';
 
 const Button = styled.button`
 background: rgb(0,7,51);
@@ -26,17 +26,18 @@ const SubCategory = () => {
   const [categoryid,setCategoryId] = useState('');
   const [categoryname,setCategoryName] = useState('');
   const [id,setId] = useState('');
+  const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=>{
     getCategories();
     getSubCategories();
   },[])
   const getCategories = async () =>{
-    const res = await axios.get('http://localhost:9000/api/categories');
+    const res = await axios.get(url+'api/categories');
     setCategories(res.data.data)
   }
   const getSubCategories = async () =>{
-    const res = await axios.get('http://localhost:9000/api/sub-categories');
+    const res = await axios.get(url+'api/sub-categories');
     setSubCategories(res.data.data)
   }
   const create = () => {
@@ -46,13 +47,13 @@ const SubCategory = () => {
       description:description,
       relatedCategory:categoryid,
     }
-    axios.post('http://localhost:9000/api/sub-category',data)
+    axios.post(url+'api/sub-category',data)
     .then(function (response){
       window.location.reload(true);
     })
   }
   const editt =async (id) =>{
-    const res =await axios.get('http://localhost:9000/api/sub-category/'+id);
+    const res =await axios.get(url+'api/sub-category/'+id);
     console.log(res.data.data[0])
     setCode(res.data.data[0].code);
     setName(res.data.data[0].name);
@@ -63,7 +64,7 @@ const SubCategory = () => {
     setEdit(true);
   }
   const deletee = (id) => {
-    axios.delete('http://localhost:9000/api/sub-category/'+id);
+    axios.delete(url+'api/sub-category/'+id);
     window.location.reload(true);
   }
   const update = () =>{
@@ -74,7 +75,7 @@ const SubCategory = () => {
       description:description,
       relatedCategory:categoryid,
     }
-    axios.put('http://localhost:9000/api/sub-category',data)
+    axios.put(url+'api/sub-category',data)
     .then(function (response){
       window.location.reload(true);
     })

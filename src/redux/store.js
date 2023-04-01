@@ -1,5 +1,6 @@
 import { configureStore,combineReducers} from "@reduxjs/toolkit";
 import medicinesaleReducer from "./medicinesaleRedux";
+import authReducer from "./authRedux"
 import {
     persistStore,
     persistReducer,
@@ -18,7 +19,7 @@ import {
     storage,
   }
 
-  const rootReducer = combineReducers({medicinesale: medicinesaleReducer})
+  const rootReducer = combineReducers({medicinesale: medicinesaleReducer,auth:authReducer})
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 

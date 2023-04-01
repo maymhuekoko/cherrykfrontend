@@ -3,9 +3,12 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {FaHome,FaClock,FaUserInjured,FaBars,FaSearch, FaAngleDown,FaListUl,FaRegRegistered,FaCreditCard} from 'react-icons/fa';
 import {MdOutlineCardMembership,MdCreate,MdHome} from 'react-icons/md'
 import {GoReport} from 'react-icons/go'
+import {GiReceiveMoney} from 'react-icons/gi'
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import SidebarMenu from './SidebarMenu';
+import { useLocation } from 'react-router-dom';
+import { useSelector} from 'react-redux';
 
 const routes= [
     {
@@ -102,11 +105,18 @@ const routes= [
             },
         ],
     },
+    {
+        path : 'http://clinicdenovofinance.kwintechnologies.com/',
+        name : 'Finance', 
+        icon : <GiReceiveMoney/>   ,
+    },
     
 ]
 
 const Sidebar = ({children}) => {
-  const [isOpen,setIsOpen] = useState(false); 
+  const [isOpen,setIsOpen] = useState(false);
+  const location = useLocation().pathname;
+  const auth =  useSelector(state=>state.auth.login);
 
   const toggle = () => setIsOpen(!isOpen);
    
@@ -148,7 +158,7 @@ const Sidebar = ({children}) => {
 
   return (  
     <div className='main-container'>
-        <motion.div 
+        {location != '/' && auth && <motion.div 
         animate={{
             width: isOpen ? '200px':'37px',
             transition:{
@@ -204,10 +214,14 @@ const Sidebar = ({children}) => {
 })
          }
         </section>
-        </motion.div>
+        </motion.div>}
+        {location != '/' && !auth ? <img src={require('../../src/404.png')} width='900px'/> :
         <main>
             {children}
-        </main>
+        </main>}
+        {/* {location = '/' ?  <main>
+            {children}
+        </main> : <img src={require('../../src/404.png')} width='900px'/>} */}
     </div>
   )
 }
