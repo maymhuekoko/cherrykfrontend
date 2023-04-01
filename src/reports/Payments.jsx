@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import styled from 'styled-components';
 import RepayDialog from '../dialogs/RepayDialog';
-import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const Badge = styled.span`
@@ -23,6 +23,7 @@ const Payment = () => {
   const [credit,setCredit] = useState('');
   const [hide,setHide] = useState(false);
   const [hide1,setHide1] = useState(false);
+  const url =  useSelector(state=>state.auth.url);
   
   useEffect(()=>{
    getSelection();
@@ -30,7 +31,7 @@ const Payment = () => {
   },[])
 
   const getSelection = async () =>{
-    const res =await axios.get('http://localhost:9000/api/patient-treatments');
+    const res =await axios.get(url+'api/patient-treatments');
     console.log(res.data.data);
     const filter = res.data.list.filter((el)=> el.leftOverAmount != 0);
     const filterd = res.data.list.filter((el)=> el.leftOverAmount == 0);
@@ -38,7 +39,7 @@ const Payment = () => {
     setSelectionDone(filterd);
   }
   const getRepayment = async () => {
-    const res =await axios.get('http://localhost:9000/api/repayments');
+    const res =await axios.get(url+'api/repayments');
     console.log(res.data.list[0].relatedPateintTreatment._id);
     setRepayment(res.data.list)
   }

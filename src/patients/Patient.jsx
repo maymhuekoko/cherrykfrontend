@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import {AiOutlinePlus,AiTwotoneFilter,AiFillInfoCircle} from 'react-icons/ai'
 import {FaFileExport} from "react-icons/fa"
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const Top = styled.div`
 display : flex;
@@ -78,11 +79,12 @@ const Patient = () => {
   const [patients,setPatients] = useState([]);
   const [allpatients,setAllPatients] = useState([]);
   const [isOpen,setIsOpen] = useState(false);
+  const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=> {
     const getPatients = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/patients');
+        const res = await axios.get(url+'api/patients');
         setPatients(res.data.list);
         setAllPatients(res.data.list);
       }catch(err){}

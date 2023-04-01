@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { Link,useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector} from 'react-redux';
 
 const Top = styled.div`
 display : flex;
@@ -119,19 +120,20 @@ const AppointmentDetail = () => {
   const [treatmentName,setTreatmentName] = useState('');
   const [method,setMethod] = useState('');
   const [bankacc,setBankAcc] = useState('');
+  const url =  useSelector(state=>state.auth.url);
   const appointmentid = useLocation().pathname.split("/")[2];
   console.log(appointmentid);
   useEffect(()=>{
     const getTreatments = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/treatments');
+        const res = await axios.get(url+'api/treatments');
         setTreatments(res.data.list);
       }catch(err){}
     };
    
     const getAccounts = async () =>{
       try{
-        const res = await axios.get('http://localhost:9000/api/accounting-lists');
+        const res = await axios.get(url+'api/accounting-lists');
         setAccounts(res.data.list);
         setAccountings(res.data.list);
       }catch(err){}
@@ -141,7 +143,7 @@ const AppointmentDetail = () => {
     getpatient();
   },[])
   const getpatient = async () => {
-    const res = await axios.get('http://localhost:9000/api/appointment/'+appointmentid);
+    const res = await axios.get(url+'api/appointment/'+appointmentid);
     setPatient(res.data.data[0].relatedPatient);
     setDoctor(res.data.data[0].relatedDoctor);
     // setTreatmentName(res.data.treatment[0])
@@ -156,7 +158,7 @@ const AppointmentDetail = () => {
         
   }
   const getTreatmentCode = async (id) => {
-    const res = await axios.get('http://localhost:9000/api/treatment/'+id);
+    const res = await axios.get(url+'api/treatment/'+id);
     // console.log(res.data.data[0].treatmentCode);
     setTreatmentCode(res.data.data[0].treatmentCode);
     setTreatmentId(id);
@@ -168,8 +170,8 @@ const AppointmentDetail = () => {
      setLeftAmount(totalAmount);
      setIsCash(false);
     }else{
-      if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.code == 'MC-1'))}
-      if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.accountingTypes == "Current Assets" && el.code != 'MC-1'))}
+      if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash In Hand'))}
+      if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash At Bank'))}
       setIsCash(true);
       document.getElementById('paid').value = 0;
       setLeftAmount('');
@@ -183,7 +185,7 @@ const AppointmentDetail = () => {
       paidAmount:paid,totalAmount:totalAmount,relatedTreatment:treatmentId,
       relatedPatient:patient._id,relatedDoctor:doctor._id,phone:patient.phone,
     }
-    const res = axios.post('http://localhost:9000/api/treatment-selection',data)
+    const res = axios.post(url+'api/treatment-selection',data)
      .then(function (response) {
          console.log('success');
          const data1 = {
@@ -194,7 +196,7 @@ const AppointmentDetail = () => {
           relatedTreatmentSelection:response.data.data._id,
           fullyPaid:true,
           }
-          const res = axios.post('http://localhost:9000/api/patient-treatment',data1)
+          const res = axios.post(url+'api/patient-treatment',data1)
           .then(function (response) {
             alert('successs');setTotalAmount(0);
             setLeftAmount(0);
@@ -299,7 +301,7 @@ const AppointmentDetail = () => {
                       <table className="table bg-light">
                         <tbody>
                         {treat.relatedAppointments.map((app,index)=>(<tr className="text-center">
-                            <th>{app}</th>
+                            <th>{++index}</th>
                             <th><Badge>Done</Badge></th>
                             <th>Date/Time</th>
                             <th>No History</th>
