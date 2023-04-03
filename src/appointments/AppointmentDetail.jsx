@@ -302,7 +302,7 @@ const AppointmentDetail = () => {
                         <tbody>
                         {treat.relatedAppointments.map((app,index)=>(<tr className="text-center">
                             <th>{++index}</th>
-                            <th><Badge>Done</Badge></th>
+                            <th><Badge>Ongoing</Badge></th>
                             <th>Date/Time</th>
                             <th>No History</th>
                             <th>Medicine Sale Amount</th>
@@ -316,7 +316,7 @@ const AppointmentDetail = () => {
                             <Link to={'/medicine_sale/'+appointmentid+'/'+treat.relatedTreatment}><Button>Medicine Sale</Button></Link>
                             <Button>Add Treatment History</Button>
                             <Button>Item Adjustment</Button>
-                            <Button>Done</Button>
+                            <Button>Ongoing</Button>
                             </ButtonGroup>
                           </td>
                         </tr>
