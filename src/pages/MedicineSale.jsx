@@ -74,6 +74,7 @@ const MedicineSale = () => {
   const [patientId,setPatientId] = useState('');
   const [remark,setRemark] = useState('');
   const [banks,setBanks] = useState([]);
+  const [accounts,setAccounts] = useState([]);
   const total = useSelector(state=>state.medicinesale.total);
   const grandtotal = useSelector(state=>state.medicinesale.grandTotal);
   const [change,setChange] = useState(0);
@@ -103,8 +104,8 @@ const MedicineSale = () => {
     };
     const getBanks = async () =>{
       try{
-        const res = await axios.get(url+'api/banks');
-        console.log(res.data.list);
+        const res = await axios.get(url+'api/accounting-lists');
+        setAccounts(res.data.list);
         setBanks(res.data.list);
       }catch(err){}
     };
@@ -141,6 +142,11 @@ const MedicineSale = () => {
      .then(function (response) {
       alert('success')
      })
+  }
+  const changeBank = (val) =>{
+    setMethod(val);
+    if(val == 'Cash Down'){setBanks(accounts.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash In Hand'))}
+    if(val == 'Bank'){setBanks(accounts.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash At Bank'))}
   }
 
   return (
@@ -248,7 +254,7 @@ const MedicineSale = () => {
               <Label>Payment</Label>
             </Div>
             <Div className='col-7'>
-              <select style={{width:'137px'}} onChange={(e)=>setMethod(e.target.value)}>
+              <select style={{width:'137px'}} onChange={(e)=>changeBank(e.target.value)}>
                 <option>Choose Method</option>
                 <option value="Cash Down">Cash Down</option>
                 <option value='Bank'>Bank Transaction</option>
@@ -263,7 +269,7 @@ const MedicineSale = () => {
               <select style={{width:'137px'}} onChange={(e)=>setBankInfo(e.target.value)}>
                 <option>Choose Bank</option>
                 {banks.map((bank,i)=>(
-                <option value={bank._id}>{bank.bankName}</option>
+                <option value={bank._id}>{bank.name}</option>
                 ))}
               </select>
             </Div>
