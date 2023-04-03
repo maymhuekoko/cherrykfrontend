@@ -167,7 +167,7 @@ const AppointmentCreate = () => {
             </Div>
             <Div className='form-group mt-3'>
                 <Label>Email</Label>
-                <Input type="number" className='form-control' onChange={(e)=>setPatientEmail(e.target.value)}/>
+                <Input type="email" className='form-control' onChange={(e)=>setPatientEmail(e.target.value)}/>
             </Div></>}
             <Div className='form-group mt-3'>
                 <Label>Doctor Name</Label>
