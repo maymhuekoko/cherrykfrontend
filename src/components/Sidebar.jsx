@@ -12,7 +12,7 @@ import { useSelector} from 'react-redux';
 
 const routes= [
     {
-        path : '/',
+        path : '/dashboard',
         name : 'Home', 
         icon : <FaHome/>   ,
     },
@@ -28,8 +28,8 @@ const routes= [
             },
             {
                 path : '/appointment/create',
-                name : 'Create', 
-                icon : <MdCreate/>   ,
+                name : 'Register', 
+                icon : <FaRegRegistered/>   ,
             },
         ],
     },
