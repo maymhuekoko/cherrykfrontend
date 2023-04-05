@@ -94,15 +94,26 @@ const routes= [
                 icon : <FaListUl/>   ,
             },
             {
+                path : '/medicine',
+                name : 'Medicine List', 
+                icon : <FaListUl/>   ,
+            },
+            {
+                path : '/procedure_medicine',
+                name : 'Procedure Medicine', 
+                icon : <FaListUl/> ,
+            },
+            {
+                path : '/treatment',
+                name : 'Treatment Create', 
+                icon : <FaRegRegistered/>   ,
+            },
+            {
                 path : '/treatment/list',
                 name : 'Treatment List', 
                 icon : <FaListUl/>   ,
             },
-            {
-                path : '/treatment/create',
-                name : 'Treatment Create', 
-                icon : <FaRegRegistered/>   ,
-            },
+            
         ],
     },
     {
