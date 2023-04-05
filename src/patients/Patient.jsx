@@ -5,6 +5,8 @@ import {AiOutlinePlus,AiTwotoneFilter,AiFillInfoCircle} from 'react-icons/ai'
 import {FaFileExport} from "react-icons/fa"
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css'
 
 const Top = styled.div`
 display : flex;
@@ -76,8 +78,10 @@ const Option = styled.option`
 `
 
 const Patient = () => {
-  const [patients,setPatients] = useState([]);
-  const [allpatients,setAllPatients] = useState([]);
+  const [patientsOld,setPatients] = useState([]);
+  const [allpatientsOld,setAllPatients] = useState([]);
+  const [patientsNew,setPatientsNew] = useState([]);
+  const [allpatientsNew,setAllPatientsNew] = useState([]);
   const [isOpen,setIsOpen] = useState(false);
   const url =  useSelector(state=>state.auth.url);
 
@@ -85,8 +89,10 @@ const Patient = () => {
     const getPatients = async () =>{
       try{
         const res = await axios.get(url+'api/patients');
-        setPatients(res.data.list);
-        setAllPatients(res.data.list);
+        setPatients(res.data.list.filter((el)=>el.patientStatus == 'Old'));
+        setAllPatients(res.data.list.filter((el)=>el.patientStatus == 'Old'));
+        setPatientsNew(res.data.list.filter((el)=>el.patientStatus == 'New'));
+        setAllPatientsNew(res.data.list.filter((el)=>el.patientStatus == 'New'));
       }catch(err){}
     };
     getPatients();
@@ -94,12 +100,20 @@ const Patient = () => {
 
   const genderfilter = (val) => {
       if(val == 1){
-        setPatients(allpatients.filter((el)=>el.gender==='Male'));
+        setPatients(allpatientsOld.filter((el)=>el.gender==='Male'));
       }
       if(val == 2){
-        setPatients(allpatients.filter((el)=>el.gender==='Female'));
+        setPatients(allpatientsOld.filter((el)=>el.gender==='Female'));
       }
   }
+  const genderfilterNew = (val) => {
+    if(val == 1){
+      setPatientsNew(allpatientsNew.filter((el)=>el.gender==='Male'));
+    }
+    if(val == 2){
+      setPatientsNew(allpatientsNew.filter((el)=>el.gender==='Female'));
+    }
+}
 
   const show = () => setIsOpen(!isOpen);
 
@@ -112,7 +126,14 @@ const Patient = () => {
         </Top>
          <Div className='card'>
           <Div className='card-body'>
-          <Top>
+          <Tabs>
+          <TabList>
+            <Tab>Old</Tab>
+            <Tab>New</Tab>
+          </TabList>
+
+          <TabPanel>
+          <Top className='mt-4'>
           <Left><Input type="text" placeholder="Search..."/></Left>
           <Right>
             {isOpen && <Select onChange={(e)=>genderfilter(e.target.value)}>
@@ -124,7 +145,7 @@ const Patient = () => {
             <Btn className='btn btn-outline-success'><FaFileExport/></Btn>
           </Right>
          </Top>
-          <Table className='table table-hover'>
+          <Table className='table table-hover mt-4'>
             <Thead>
             <Tr>
               <Th>#</Th>
@@ -139,7 +160,7 @@ const Patient = () => {
             </Tr>
             </Thead>
             <Tbody>
-            {patients.map((patient,i) => (
+            {patientsOld.map((patient,i) => (
               <Tr>
               <Td>{++i}</Td>
               <Td>{patient.patientID}</Td>
@@ -155,6 +176,53 @@ const Patient = () => {
             }
             </Tbody>
           </Table>
+          </TabPanel>
+          <TabPanel>
+          <Top className='mt-4'>
+          <Left><Input type="text" placeholder="Search..."/></Left>
+          <Right>
+            {isOpen && <Select onChange={(e)=>genderfilterNew(e.target.value)}>
+              <Option>Gender</Option>
+              <Option value="1">Male</Option>
+              <Option value="2">Female</Option>
+            </Select>}
+            <Btn className='btn btn-outline-primary'><AiTwotoneFilter onClick={show}/></Btn>
+            <Btn className='btn btn-outline-success'><FaFileExport/></Btn>
+          </Right>
+         </Top>
+          <Table className='table table-hover mt-4'>
+            <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>Patient Id</Th>
+              <Th>Name</Th>
+              <Th>Age</Th>
+              <Th>Phone</Th>
+              <Th>Date of Birth</Th>
+              <Th>Gender</Th>
+              <Th>Address</Th>
+              <Th>Action</Th>
+            </Tr>
+            </Thead>
+            <Tbody>
+            {patientsNew.map((patient,i) => (
+              <Tr>
+              <Td>{++i}</Td>
+              <Td>{patient.patientID}</Td>
+              <Td>{patient.name}</Td>
+              <Td>{patient.age}</Td>
+              <Td>{patient.phone}</Td>
+              <Td>{patient.dateOfBirth}</Td>
+              <Td>{patient.gender}</Td>
+              <Td>{patient.address}</Td>
+              <Td><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Td>
+            </Tr>
+            ))
+            }
+            </Tbody>
+          </Table>
+          </TabPanel>
+        </Tabs>
           </Div>
          </Div>
     </div>

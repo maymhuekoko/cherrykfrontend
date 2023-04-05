@@ -3,6 +3,8 @@ import Nav from "../components/Navbar"
 import styled from 'styled-components'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import Swal from "sweetalert2"
 
 const Top = styled.div`
 display : flex;
@@ -67,17 +69,33 @@ const Register = () => {
   const [occupation,setOccupation] = useState('');
   const [img,setImg] = useState('');
   const url =  useSelector(state=>state.auth.url);
+  const navigate = useNavigate();
 
   const patientCreate = () => {
     const data = {name: name,email: email,age:age,phone:phone,dateOfBirth:dob,address:address,
-                  occupation: occupation,img:img,gender:gender,
+                  occupation: occupation,img:img,gender:gender,patientStatus:'Old'
                  }
       const config = {
           headers: {"Content-Type": "multipart/form-data"}
       }
       const res = axios.post(url+'api/patient', data, config)
      .then(function (response) {
-      alert('success')
+      Swal.fire({
+        title: "Success",
+        text: "successfully Patient Create!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(function () {
+        alert('success')
+        navigate('/patient/list')
+        })
+    }).catch(error =>{
+      Swal.fire({
+        title: "Warning",
+        text: "Something Wrong!",
+        icon: "warning",
+        confirmButtonText: "CANCEL",
+      })
      })
   }
   return (
