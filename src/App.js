@@ -7,6 +7,7 @@ import AppointmentCreate from './appointments/AppointmentCreate';
 import AppointmentDetail from './appointments/AppointmentDetail';
 import Patient from './patients/Patient';
 import PatientRegister from './patients/Register';
+import Treatment from './master/treatments/Treatment';
 import TreatmentCreate from './master/treatments/Create';
 import Member from './patients/Member';
 import PatientCredit from './patients/PatientCredit';
@@ -17,7 +18,10 @@ import Payments from  './reports/Payments'
 import Category from './master/datas/Category';
 import SubCategory from './master/datas/SubCategory';
 import Brand from './master/datas/Brand';
-
+import Medicine from './master/datas/Medicine';
+import MedicineUnit from './master/datas/MedicineUnit';
+import ProcedureMedicine from './master/datas/ProcedureMedicine';
+import ProcedureMedicineUnit from './master/datas/ProcedureMedicineUnit';
 
 function App() {
   return (
@@ -32,13 +36,18 @@ function App() {
         <Route path='/patient/register' element={<PatientRegister />} />
         <Route path='/patient/member' element={<Member />} />
         <Route path='/patient/credit_list' element={<PatientCredit />} />
-        <Route path='/treatment/create' element={<TreatmentCreate/>} />
+        <Route path='/treatment' element={<Treatment/>} />
+        <Route path='/treatment/create/:id/:name' element={<TreatmentCreate/>} />
         <Route path='/medicine_sale/:aid/:tid' element={<MedicineSale />} />
         <Route path='/single_payment/:id' element={<Payment />} />
         <Route path='/reports/payment' element={<Payments/>} />
         <Route path='/category' element={<Category/>} />
         <Route path='/subcategory' element={<SubCategory/>} />
         <Route path='/brand' element={<Brand/>} />
+        <Route path='/medicine' element={<Medicine/>} />
+        <Route path='/medicine/:id/:name' element={<MedicineUnit/>} />
+        <Route path='/procedure_medicine' element={<ProcedureMedicine/>} />
+        <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit/>} />
       </Routes>
       </Sidebar>  
   );

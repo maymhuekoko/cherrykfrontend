@@ -1,6 +1,7 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import Nav from "../../components/Navbar"
 import styled from 'styled-components'
+import { useLocation } from 'react-router-dom';
 
 const Top = styled.div`
 display : flex;
@@ -77,12 +78,26 @@ font-size:14px;
 `
 
 const Create = () => {
+  // const [doctors,setDoctors] = useState([]);
+  // const [therapists,setTherapists] = useState([]);
+  // const [procedures,setProcedures] = useState([]);
+  const tname = useLocation().pathname.split('/')[4];
+
+  // useEffect(()=>{
+  //    getDoctors();
+  //    getTherapists();
+  //    getProcedures();
+  // },[])
+  // const getDoctors = async () =>{
+  //   const res
+  // }
   return (
     <div>
         <Nav/>
         <Left><Title>Treatment Unit Create</Title></Left>
         <Div className='card'>
           <Div className='card-body row'>
+            <h6>{tname}'s Unit</h6>
           <Div className='offset-2 col-8'>
             <Div className='row'>
             <Div className='col-4 form-group '>

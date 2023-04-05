@@ -217,37 +217,17 @@ const AppointmentDetail = () => {
             <Div className='row'>
             <Div className='col-10'>
             <Div className='row'>
-            <Div className='col-3 form-group '>
-                <Label>Patient Name<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.name}/>
+            <Div className='col-6 form-group '>
+                <h6>Patient Name - {patient.name}</h6>
+                <h6>Patient Id - {patient.patientID}</h6>
+                <h6>Status - {patient.patientStatus}</h6>
+                <h6>Email - {patient.email}</h6>
             </Div>
-            <Div className='col-3 form-group'>
-                <Label>Patient Id<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.patientID}/>
-            </Div>
-            <Div className='col-3 form-group'>
-                <Label>Status<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.patientStatus}/>
-            </Div>
-            <Div className='col-3 form-group'>
-                <Label>Email Address<Span>*</Span></Label>
-                <Input type="email" className='form-control' value={patient.email}/>
-            </Div>
-            <Div className='col-3 form-group '>
-                <Label>Member Status<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.patientStatus}/>
-            </Div>
-            <Div className='col-3 form-group'>
-                <Label>Occupancy<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.accupancy}/>
-            </Div>
-            <Div className='col-3 form-group'>
-                <Label>Gender<Span>*</Span></Label>
-                <Input type="text" className='form-control' value={patient.gender}/>
-            </Div>
-            <Div className='col-3 form-group'>
-                <Label>DOB<Span>*</Span></Label>
-                <Input type="date" className='form-control' value={patient.dateOfBirth}/>
+            <Div className='col-6 form-group '>
+                <h6>Member Status - {patient.patientStatus}</h6>
+                <h6>Occupation - {patient.occupation}</h6>
+                <h6>Gender - {patient.gender}</h6>
+                <h6>DOB - {patient.dateOfBirth}</h6>
             </Div>
             <Div className='col-12 mt-2'>
                 <But>Add Medicine History</But>
