@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
     name: "medicinesale",
     initialState: {
-      // url : 'http://clinicdenovobackend.kwintechnologies.com:3000/',
+      url : 'http://clinicdenovobackend.kwintechnologies.com:3000/',
       login : false,
       user: '',
-      url : 'http://localhost:9000/'
+      // url : 'http://localhost:9000/'
     },
     reducers: {
        loginSuccess:(state) => {
