@@ -2,6 +2,7 @@ import './App.css';
 import { Routes,Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login'
+import StockCount from './pages/StockCount'
 import Appointment from './appointments/Appointment';
 import AppointmentCreate from './appointments/AppointmentCreate';
 import AppointmentDetail from './appointments/AppointmentDetail';
@@ -47,7 +48,8 @@ function App() {
         <Route path='/medicine' element={<Medicine/>} />
         <Route path='/medicine/:id/:name' element={<MedicineUnit/>} />
         <Route path='/procedure_medicine' element={<ProcedureMedicine/>} />
-        <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit/>} />
+        <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit />} />
+        <Route path='/stockcount' element={<StockCount/>} />
       </Routes>
       </Sidebar>  
   );

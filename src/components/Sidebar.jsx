@@ -1,7 +1,9 @@
 import React from 'react'
 import {AnimatePresence, motion} from 'framer-motion';
-import {FaHome,FaClock,FaUserInjured,FaBars,FaSearch, FaAngleDown,FaListUl,FaRegRegistered,FaCreditCard} from 'react-icons/fa';
-import {MdOutlineCardMembership,MdCreate,MdHome} from 'react-icons/md'
+import {FaHome,FaClock,FaUserInjured,FaBars,FaSearch, FaAngleDown,FaListUl,FaRegRegistered,FaCreditCard,FaUserCog} from 'react-icons/fa';
+import {MdOutlineCardMembership,MdCreate,MdHome,MdAccountBalance} from 'react-icons/md'
+import {HiUserGroup} from 'react-icons/hi'
+import {BiPurchaseTag} from 'react-icons/bi'
 import {GoReport} from 'react-icons/go'
 import {GiReceiveMoney} from 'react-icons/gi'
 import { NavLink } from 'react-router-dom';
@@ -57,6 +59,28 @@ const routes= [
                 path : '/patient/credit_list',
                 name : 'Credit', 
                 icon : <FaCreditCard/>   ,
+            },
+        ],
+    },
+    {
+        path : '/admin',
+        name : 'Admin', 
+        icon : <FaUserCog/>,
+        subRoutes : [
+            {
+                path : '/stockcount',
+                name : 'Stock Count & Price', 
+                icon : <MdAccountBalance/>   ,
+            },
+            {
+                path : '/purchase',
+                name : 'Purchase List', 
+                icon : <BiPurchaseTag/>   ,
+            },
+            {
+                path : '/supplier',
+                name : 'Supplier List', 
+                icon : <HiUserGroup/>   ,
             },
         ],
     },
@@ -119,7 +143,7 @@ const routes= [
     {
         path : 'http://clinicdenovofinance.kwintechnologies.com/',
         name : 'Finance', 
-        icon : <GiReceiveMoney/>   ,
+        icon : <GiReceiveMoney/> ,
     },
     
 ]
