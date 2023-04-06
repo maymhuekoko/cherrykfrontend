@@ -2,6 +2,9 @@ import React,{useEffect,useState} from 'react'
 import Nav from "../../components/Navbar"
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector} from 'react-redux';
+
 
 const Top = styled.div`
 display : flex;
@@ -78,19 +81,33 @@ font-size:14px;
 `
 
 const Create = () => {
-  // const [doctors,setDoctors] = useState([]);
-  // const [therapists,setTherapists] = useState([]);
-  // const [procedures,setProcedures] = useState([]);
+  const [doctors,setDoctors] = useState([]);
+  const [therapists,setTherapists] = useState([]);
+  const [procedures,setProcedures] = useState([]);
+  const [totalPrice,setTotalPrice] = useState('');
+  const [percent,setPercent] = useState('');
+  const [sellPrice,setSellPrice] = useState('');
+  const [description,setDescription] = useState('');
   const tname = useLocation().pathname.split('/')[4];
+  const url =  useSelector(state=>state.auth.url);
 
-  // useEffect(()=>{
-  //    getDoctors();
-  //    getTherapists();
-  //    getProcedures();
-  // },[])
-  // const getDoctors = async () =>{
-  //   const res
-  // }
+  useEffect(()=>{
+     getDoctors();
+     getTherapists();
+     getProcedures();
+  },[])
+  const getDoctors = async () =>{
+    const res = await axios.get(url+'api/doctors');
+    setDoctors(res.data.data);
+  }
+  const getTherapists = async () =>{
+    const res = await axios.get(url+'api/therapists');
+    setTherapists(res.data.data);
+  }
+  const getProcedures = async () =>{
+    const res = await axios.get(url+'api/procedure-items');
+    setProcedures(res.data.list);
+  }
   return (
     <div>
         <Nav/>
@@ -116,24 +133,33 @@ const Create = () => {
                 <Label>Doctor Name<Span>*</Span></Label>
                 <Select className='form-control'>
                 <Option>Select Doctor</Option>
-                <Option value="1">Test Dr.1</Option>
-                <Option value="2">Test Dr.2</Option>
+                {
+                  doctors.map((doctor,i)=>(
+                      <Option value={doctor._id}>{doctor.name}</Option>
+                  ))
+                }
                 </Select>
             </Div>
             <Div className='col-4 form-group mt-3'>
                 <Label>Therapist Name<Span>*</Span></Label>
                 <Select className='form-control'>
                 <Option>Select Therapist</Option>
-                <Option value="1">Test Tp.1</Option>
-                <Option value="2">Test Tp.2</Option>
+                {
+                  therapists.map((therapist,i)=>(
+                      <Option value={therapist._id}>{therapist.name}</Option>
+                  ))
+                }
                 </Select>
             </Div>
             <Div className='col-6 form-group mt-3'>
                 <Label>Procedure Medicine</Label>
                 <Select className='form-control'>
                 <Option>Select Procedure Medicine</Option>
-                <Option value="1">Procedure One</Option>
-                <Option value="2">Procedure Two</Option>
+                {
+                  procedures.map((procedure,index)=>(
+                      <Option value={procedure._id}>{procedure.procedureItemName}</Option>
+                  ))
+                }
                 </Select>
             </Div>
             <Div className='col-3 mt-3'>
@@ -235,19 +261,19 @@ const Create = () => {
             </Div>
             <Div className='col-4 form-group mt-3'>
                 <Label>Estimate Total Price<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' onChange={(e)=>setTotalPrice(e.target.value)}/>
             </Div>
             <Div className='col-2 form-group mt-3'>
                 <Label>Percent(%)<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' onChange={(e)=>setPercent(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group mt-3'>
                 <Label>Selling Price<Span>*</Span></Label>
-                <Input type="number" className='form-control'/>
+                <Input type="number" className='form-control' onChange={(e)=>setSellPrice(e.target.value)}/>
             </Div>
             <Div className='col-6 form-group mt-3'>
                 <Label>Description</Label>
-                <Textarea className='form-control'/>
+                <Textarea className='form-control' onChange={(e)=>setDescription(e.target.value)}/>
             </Div>
             </Div>
             </Div>
