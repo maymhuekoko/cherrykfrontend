@@ -3,6 +3,10 @@ import { Routes,Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login'
 import StockCount from './pages/StockCount'
+import Purchase from './pages/purchase/List'
+import Create from './pages/purchase/Create'
+import Supplier from './pages/supplier/List'
+import CreditDetail from './pages/supplier/Credit'
 import Appointment from './appointments/Appointment';
 import AppointmentCreate from './appointments/AppointmentCreate';
 import AppointmentDetail from './appointments/AppointmentDetail';
@@ -50,6 +54,10 @@ function App() {
         <Route path='/procedure_medicine' element={<ProcedureMedicine/>} />
         <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit />} />
         <Route path='/stockcount' element={<StockCount/>} />
+        <Route path='/purchase' element={<Purchase/>} />
+        <Route path='/create_purchase' element={<Create/>} />
+        <Route path='/supplier' element={<Supplier/>} />
+        <Route path='/credit_detail/:id' element={<CreditDetail/>} />
       </Routes>
       </Sidebar>  
   );

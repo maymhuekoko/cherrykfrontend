@@ -25,7 +25,7 @@ const Navbar = () => {
   return (
     <nav className="nav">
         <div className="left">
-        <AiOutlineArrowLeft  className='mr' style={{marginLeft:15}}/>
+        <AiOutlineArrowLeft  className='mr' style={{marginLeft:15}} onClick={()=>navigate(-1)}/>
         <span>Aesthetic Clinic</span>
         </div>
         <div className="right">
