@@ -80,17 +80,17 @@ const Option = styled.option`
 `
 
 const List = () => {
-  const [suppliers,setSuppliers] = useState([]);
+  const [purchases,setPurchases] = useState([]);
   const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=> {
-    const getSuppliers = async () =>{
+    const getpurchases = async () =>{
       try{
-        const res = await axios.get(url+'api/suppliers');
-        setSuppliers(res.data.list);
+        const res = await axios.get(url+'api/purchases');
+        setPurchases(res.data.list);
       }catch(err){}
     };
-    getSuppliers();
+    getpurchases();
   },[]);
 
   return (
@@ -114,25 +114,19 @@ const List = () => {
             </Tr>
             </Thead>
             <Tbody>
-            {/* {suppliers.map((supplier,i) => (
+            {purchases.map((purchase,i) => (
               <Tr>
               <Td>{++i}</Td>
-              <Td>{supplier.name}</Td>
-              <Td>{supplier.phone}</Td>
-              <Td>{supplier.address}</Td>
-              <Td>{supplier.creditAmount}</Td>
-              <Td><Link to={'/credit_detail/'+supplier._id}><Button>Credit Detail</Button></Link></Td>
+              <Td>{purchase.date}</Td>
+              <Td>{purchase.supplierName.name}</Td>
+              <Td>{purchase.totalQTY}</Td>
+              <Td>{purchase.totalPrice}</Td>
               <Td>
-              <IconButton aria-label="delete">
-                <DeleteIcon className='text-danger'/>
-                </IconButton>
-                <IconButton aria-label="edit">
-                <EditIcon className='text-warning'/>
-                </IconButton>
+              <Link to={'/purchase/'+purchase._id}><Btn className='btn btn-sm btn-primary'>Detail</Btn></Link>
               </Td>
             </Tr>
             ))
-            } */}
+            }
             </Tbody>
           </Table>
           </Div>

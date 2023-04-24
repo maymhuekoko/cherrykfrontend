@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login'
 import StockCount from './pages/StockCount'
 import Purchase from './pages/purchase/List'
+import PurchaseDetail from './pages/purchase/Detail'
+import PurchaseEdit from './pages/purchase/Edit'
 import Create from './pages/purchase/Create'
 import Supplier from './pages/supplier/List'
 import CreditDetail from './pages/supplier/Credit'
@@ -55,6 +57,8 @@ function App() {
         <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit />} />
         <Route path='/stockcount' element={<StockCount/>} />
         <Route path='/purchase' element={<Purchase/>} />
+        <Route path='/purchase/:id' element={<PurchaseDetail/>} />
+        <Route path='/edit_purchase/:id' element={<PurchaseEdit/>} />
         <Route path='/create_purchase' element={<Create/>} />
         <Route path='/supplier' element={<Supplier/>} />
         <Route path='/credit_detail/:id' element={<CreditDetail/>} />
