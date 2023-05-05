@@ -84,6 +84,11 @@ const Create = () => {
   const [doctors,setDoctors] = useState([]);
   const [therapists,setTherapists] = useState([]);
   const [procedures,setProcedures] = useState([]);
+  const [machines,setMachines] = useState([]);
+  const [accessories,setAccessories] = useState([]);
+  const [items,setItems] = useState([]);
+  const [isItem,setIsItem] = useState(false);
+  const [id,setId] = useState('');
   const [totalPrice,setTotalPrice] = useState('');
   const [percent,setPercent] = useState('');
   const [sellPrice,setSellPrice] = useState('');
@@ -95,6 +100,8 @@ const Create = () => {
      getDoctors();
      getTherapists();
      getProcedures();
+     getAccessories();
+     getMachines();
   },[])
   const getDoctors = async () =>{
     const res = await axios.get(url+'api/doctors');
@@ -107,6 +114,25 @@ const Create = () => {
   const getProcedures = async () =>{
     const res = await axios.get(url+'api/procedure-items');
     setProcedures(res.data.list);
+  }
+  const getAccessories = async () =>{
+    const res = await axios.get(url+'api/accessory-items');
+    setAccessories(res.data.list);
+  }
+  const getMachines = async () =>{
+    const res = await axios.get(url+'api/fixed-assets');
+    setMachines(res.data.list.filter((el) => el.type == 'Medical Equipment' || el.type == 'Surgery Equipment' || el.type == 'Medical Machinery'));
+  }
+  const chgItem = async () =>{
+    const obj = {
+      "item_id":id,
+      "quantity":1,
+      "perUsageQTY":1,
+    }
+    setItems( arr => [...arr, obj]);
+    console.log(3);
+    console.log(items);
+    setIsItem(true);
   }
   return (
     <div>
@@ -153,7 +179,7 @@ const Create = () => {
             </Div>
             <Div className='col-6 form-group mt-3'>
                 <Label>Procedure Medicine</Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>setId(e.target.value)}>
                 <Option>Select Procedure Medicine</Option>
                 {
                   procedures.map((procedure,index)=>(
@@ -163,7 +189,7 @@ const Create = () => {
                 </Select>
             </Div>
             <Div className='col-3 mt-3'>
-            <Button>Add</Button>
+            <Button onClick={chgItem}>Add</Button>
             </Div>
             <Div className='col-12 mt-3'>
             <Table className='table table-striped'>
@@ -177,24 +203,33 @@ const Create = () => {
               <Th>Amount</Th>
             </Tr>
             </Thead>
-            <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>Test</Td>
-              <Td>10</Td>
-              <Td>1000</Td>
-              <Td>1</Td>
-              <Td>1000</Td>
-            </Tr>
-            </Tbody>
+            {isItem && <Tbody>
+            {procedures.map((procedure,index)=>(
+                items.map((item,i)=>{
+                  procedure._id == item.item_id &&
+                  <Tr>
+                    <Td>{++i}</Td>
+                    <Td>{procedure.procedureItemName}</Td>
+                    <Td>1</Td>
+                    <Td>{procedure.purchasePrice}</Td>
+                    <Td>1</Td>
+                    <Td>{procedure.purchasePrice}</Td>
+                  </Tr>
+                })
+              ))
+            }
+            </Tbody>}
             </Table>
             </Div>
            <Div className='col-6 form-group mt-3'>
             <Label>Procedure Accessory</Label>
             <Select className='form-control'>
             <Option>Select Procedure Accessory</Option>
-            <Option value="1">Accessory One</Option>
-            <Option value="2">Accessory Two</Option>
+            {
+              accessories.map((accessory,index)=>(
+                <Option value={accessory._id}>{accessory.accessoryItemName}</Option>
+            ))
+             }
             </Select>
           </Div>
             <Div className='col-3 mt-3'>
@@ -228,8 +263,11 @@ const Create = () => {
                 <Label>Machine</Label>
                 <Select className='form-control'>
                 <Option>Select Machine</Option>
-                <Option value="1">Machine One</Option>
-                <Option value="2">Machine Two</Option>
+                {
+                  machines.map((machine,i)=>(
+                    <Option value={machine._id}>{machine.name}</Option>
+                ))
+                  }
                 </Select>
             </Div>
             <Div className='col-3 mt-3'>
