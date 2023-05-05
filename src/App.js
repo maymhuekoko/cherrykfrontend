@@ -25,10 +25,13 @@ import Payments from  './reports/Payments'
 import Category from './master/datas/Category';
 import SubCategory from './master/datas/SubCategory';
 import Brand from './master/datas/Brand';
+import Machinery from './master/datas/Machinery';
 import Medicine from './master/datas/Medicine';
 import MedicineUnit from './master/datas/MedicineUnit';
 import ProcedureMedicine from './master/datas/ProcedureMedicine';
 import ProcedureMedicineUnit from './master/datas/ProcedureMedicineUnit';
+import ProcedureAccessory from './master/datas/ProcedureAccessory';
+import ProcedureAccessoryUnit from './master/datas/ProcedureAccessoryUnit';
 
 function App() {
   return (
@@ -55,12 +58,15 @@ function App() {
         <Route path='/medicine/:id/:name' element={<MedicineUnit/>} />
         <Route path='/procedure_medicine' element={<ProcedureMedicine/>} />
         <Route path='/procedure_medicine/:id/:name' element={<ProcedureMedicineUnit />} />
+        <Route path='/procedure_accessory' element={<ProcedureAccessory/>} />
+        <Route path='/procedure_accessory/:id/:name' element={<ProcedureAccessoryUnit />} />
         <Route path='/stockcount' element={<StockCount/>} />
         <Route path='/purchase' element={<Purchase/>} />
         <Route path='/purchase/:id' element={<PurchaseDetail/>} />
         <Route path='/edit_purchase/:id' element={<PurchaseEdit/>} />
         <Route path='/create_purchase' element={<Create/>} />
         <Route path='/supplier' element={<Supplier/>} />
+        <Route path='/machinery' element={<Machinery/>} />
         <Route path='/credit_detail/:id' element={<CreditDetail/>} />
       </Routes>
       </Sidebar>  

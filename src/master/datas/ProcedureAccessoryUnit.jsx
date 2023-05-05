@@ -18,7 +18,7 @@ border:none;
 border-radius:10px;
 `
 
-const MedicineUnit = () => {
+const ProcedureMedicineUnit = () => {
   const [code,setCode] = useState('');
   const [name,setName] = useState('');
   const [description,setDescription] = useState('');
@@ -34,34 +34,33 @@ const MedicineUnit = () => {
   const itemid = useLocation().pathname.split('/')[2];
   const itemname = useLocation().pathname.split('/')[3];
 
-
   useEffect(()=>{
     getUnits();
-    
   },[])
   const getUnits = async () =>{
-    const res = await axios.get(url+'api/medicine-items');
-    console.log(res.data.list);
-    setUnits(res.data.list.filter((el)=>el.name._id == itemid));
+    const res = await axios.get(url+'api/accessory-items/'+itemid);
+    console.log('hello')
+    // console.log(res.data.list.filter((el)=>el.name._id == '644a284ad6dfaa2aea5d89ca'));
+    setUnits(res.data.data);
   }
   const create = () =>{
     const data={
       code:code, 
       name:itemid, 
-      medicineItemName:name,
+      accessoryItemName:name,
       currentQuantity:currqty,
-      reorderQuantity:reqty,
+      reOrderQuantity:reqty,
       purchasePrice:purchase,
       sellingPrice:sell,
       description:description,
       fromUnit:from,
       toUnit:to,
     }
-    axios.post(url+'api/medicine-item',data)
+    axios.post(url+'api/accessory-item',data)
     .then(function (response){
       Swal.fire({
         title: "Success",
-        text: "successfully Created Medicine Item!",
+        text: "successfully Created Accessory Item!",
         icon: "success",
         confirmButtonText: "OK",
       }).then(function () {
@@ -80,7 +79,7 @@ const MedicineUnit = () => {
   return (
     <div>
         <Nav/>
-        <h5 className='font-weight-bold mt-3'>Medicine Unit List</h5>
+        <h5 className='font-weight-bold mt-3'>Procedure Medicine Unit List</h5>
         <div className='row mt-3'>
           <div className='col-9'>
           <div className='card'>
@@ -108,9 +107,9 @@ const MedicineUnit = () => {
                     <tr key={unit._id}>
                      <td>{++i}</td>
                      <td>{unit.code}</td>
-                     <td>{unit.medicineItemName}</td>
+                     <td>{unit.procedureItemName}</td>
                      <td>{unit.currentQuantity}</td>
-                     <td>{unit.reOrderQuantity}</td>
+                     <td>{unit.reorderQuantity}</td>
                      <td>{unit.purchasePrice}</td>
                      <td>{unit.sellingPrice}</td>
                      <td>1</td>
@@ -194,4 +193,4 @@ const MedicineUnit = () => {
   )
 }
 
-export default MedicineUnit
+export default ProcedureMedicineUnit

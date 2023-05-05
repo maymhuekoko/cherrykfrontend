@@ -38,10 +38,10 @@ const ProcedureMedicineUnit = () => {
     getUnits();
   },[])
   const getUnits = async () =>{
-    const res = await axios.get(url+'api/procedure-items');
-    setUnits(res.data.list.filter((el)=>el.name._id == itemid));
+    const res = await axios.get(url+'api/procedure-items/'+itemid);
     console.log('hello')
-    console.log(res.data.list.filter((el)=>el.name._id == itemid))
+    // console.log(res.data.list.filter((el)=>el.name._id == '644a284ad6dfaa2aea5d89ca'));
+    setUnits(res.data.data);
   }
   const create = () =>{
     const data={
@@ -60,7 +60,7 @@ const ProcedureMedicineUnit = () => {
     .then(function (response){
       Swal.fire({
         title: "Success",
-        text: "successfully Login!",
+        text: "successfully Created Procedure Item!",
         icon: "success",
         confirmButtonText: "OK",
       }).then(function () {
@@ -79,7 +79,7 @@ const ProcedureMedicineUnit = () => {
   return (
     <div>
         <Nav/>
-        <h5 className='font-weight-bold mt-3'>Medicine Unit List</h5>
+        <h5 className='font-weight-bold mt-3'>Procedure Medicine Unit List</h5>
         <div className='row mt-3'>
           <div className='col-9'>
           <div className='card'>

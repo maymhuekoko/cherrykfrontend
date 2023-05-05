@@ -38,13 +38,13 @@ const Detail = () => {
                             <span>Total Quantity</span><br></br>
                             <span>Total Price</span><br></br>
                             <h6 className='mt-2'>Remark</h6>
-                            <span>{purchase.remark}</span>
+                            <span></span>
                             </div>
                             <div className='col-6'>
-                            <span>{purchase.purchaseDate}</span><br></br>
-                            <span>{purchase.supplierName}</span><br></br>
-                            <span>{purchase.totalQTY}</span><br></br>
-                            <span>{purchase.totalPrice} MMK</span>
+                            <span></span><br></br>
+                            <span></span><br></br>
+                            <span></span><br></br>
+                            <span> MMK</span>
                             </div>
                             <div className='offset-3 col-6 mt-4'>
                             <Link to={'/edit_purchase/'+purchase._id}><button className='btn btn-sm btn-warning'>Edit</button></Link>&nbsp;&nbsp;&nbsp;
@@ -68,7 +68,7 @@ const Detail = () => {
                 <th scope="col">Sub Total</th>
               </tr>
             </thead>
-            <tbody>
+            {/* <tbody>
               {medicine.map((med,i)=>(
               <tr>
                 <td scope="row">{++i}</td>
@@ -87,7 +87,7 @@ const Detail = () => {
                   <td>{med.subTotal}</td>
                 </tr>
                 ))}
-            </tbody>
+            </tbody> */}
           </table>
             </div>
           </div>

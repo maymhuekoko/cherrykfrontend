@@ -57,6 +57,7 @@ const Create = () => {
   }
   const getMedicines = async () =>{
     const res = await axios.get(url+'api/medicine-items');
+    // console.log('bro!');
     console.log(res.data.list);
     setUnits(res.data.list);
     setValue(1);
@@ -95,8 +96,9 @@ const Create = () => {
       }
       setProcedures( arr => [...arr, obj]);
     }
-    setTotQty(totqty+qty);
+    
     setTotPrice(totprice+res[0].purchasePrice * qty);
+    setTotQty(totqty+parseInt(qty));
   }
   const del = (id,val) =>  {
     if(val == 1){
@@ -163,7 +165,7 @@ const Create = () => {
               <table className="table table-hover">
                 <thead>			
                 <tr>
-                    <th>#</th>
+                    {/* <th>#</th> */}
                     <th scope="col">Name</th>
                     <th scope="col">Qty</th>
                     <th scope="col">Price</th>
@@ -173,7 +175,7 @@ const Create = () => {
                 </thead>
                 <tbody>
                 {medicines.map((med,index)=>(<tr>
-                    <th>{++index}</th>
+                    {/* <th>{++index}</th> */}
                     <th>{med.name}</th>
                     <th>{med.qty}</th>
                     <th>{med.price}</th>
@@ -181,7 +183,7 @@ const Create = () => {
                     <th><RxCross2 onClick={()=>del(med.item_id,1)}/></th>
                 </tr>))}
                 {procedures.map((pro,index)=>(<tr>
-                  <th>{++index}</th>
+                  {/* <th>{++index}</th> */}
                     <th>{pro.name}</th>
                     <th>{pro.qty}</th>
                     <th>{pro.price}</th>
@@ -231,7 +233,7 @@ const Create = () => {
               </div>
               <div class='row form-group mt-3'>
               <label htmlFor="">Quantity</label>
-              <input type="number" className='form-control' onChange={(e)=>setQty(e.target.value)}/>
+              <input type="number" className='form-control'  onChange={(e)=>setQty(e.target.value)}/>
               </div>
               <div class='row form-group mt-3'>
               <label htmlFor="">Enter Last Purchase Price</label>

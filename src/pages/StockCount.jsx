@@ -83,12 +83,14 @@ const Option = styled.option`
 const StockCount = () => {
   const [procedures,setProcedures] = useState([]);
   const [medicines,setMedicines] = useState([]);
+  const [accessory,setAccessory] = useState([]);
   const navigate = useNavigate();
   const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=>{
     getMedicines();
     getProcedures();
+    getAccessory();
  },[])
 
  const getMedicines = async () =>{
@@ -99,6 +101,11 @@ const StockCount = () => {
    const res = await axios.get(url+'api/procedure-items');
    setProcedures(res.data.list);
  }
+ const getAccessory = async () =>{
+  const res = await axios.get(url+'api/accessory-items');
+  setAccessory(res.data.list);
+ }
+
  const change = (id,val,type) => {
    if(type==1){
     const data ={id:id,currentQuantity:val}
@@ -229,6 +236,71 @@ const StockCount = () => {
  }) 
   }
 }
+const changeA = (id,val,type) => {
+  if(type==1){
+   const data ={id:id,currentQuantity:val}
+   axios.put(url+'api/accessory-item',data)
+  .then(function (response){
+   Swal.fire({
+     title: "Success",
+     text: "successfully Changed!",
+     icon: "success",
+     confirmButtonText: "OK",
+   }).then(function () {
+     navigate('/stockcount');
+     })
+ }).catch(error =>{
+   Swal.fire({
+     title: "Error",
+     text: "Something Wrong !",
+     icon: "error",
+     confirmButtonText: "CANCEL",
+   })
+ }) 
+  }
+  if(type==2){
+  const data ={id:id,sellingPrice:val}
+  axios.put(url+'api/accessory-item',data)
+  .then(function (response){
+   Swal.fire({
+     title: "Success",
+     text: "successfully Changed!",
+     icon: "success",
+     confirmButtonText: "OK",
+   }).then(function () {
+     navigate('/stockcount');
+     })
+ }).catch(error =>{
+   Swal.fire({
+     title: "Error",
+     text: "Something Wrong !",
+     icon: "error",
+     confirmButtonText: "CANCEL",
+   })
+ }) 
+  }
+  if(type==3){
+   const data ={id:id,purchasePrice:val}
+   axios.put(url+'api/accessory-item',data)
+  .then(function (response){
+   Swal.fire({
+     title: "Success",
+     text: "successfully Changed!",
+     icon: "success",
+     confirmButtonText: "OK",
+   }).then(function () {
+     navigate('/stockcount');
+     })
+ }).catch(error =>{
+   Swal.fire({
+     title: "Error",
+     text: "Something Wrong !",
+     icon: "error",
+     confirmButtonText: "CANCEL",
+   })
+ }) 
+  }
+}
 
   return (
     <div>
@@ -242,6 +314,7 @@ const StockCount = () => {
           <TabList>
             <Tab>Medicine Items</Tab>
             <Tab>Procedure Items</Tab>
+            <Tab>Accessory Items</Tab>
           </TabList>
 
           <TabPanel>
@@ -307,6 +380,41 @@ const StockCount = () => {
               <Td><input type="number" placeholder={procedure.currentQuantity} onDoubleClick={(e)=>changeP(procedure._id,e.target.value,1)}/></Td>
               <Td><input type="number" placeholder={procedure.sellingPrice} onDoubleClick={(e)=>changeP(procedure._id,e.target.value,2)}/></Td>
               <Td><input type="number" placeholder={procedure.purchasePrice} onDoubleClick={(e)=>changeP(procedure._id,e.target.value,3)}/></Td>
+              <Td><Btn className='btn btn-sm btn-primary'><MdDoubleArrow/></Btn></Td>
+            </Tr>
+            ))
+            }
+            </Tbody>
+          </Table>
+          </TabPanel>
+          <TabPanel>
+          <Top className='mt-4'>
+          <Left><Input type="text" placeholder="Search..."/></Left>
+          <Right>
+            <Btn className='btn btn-outline-success'><FaFileExport/></Btn>
+          </Right>
+         </Top>
+          <Table className='table table-hover mt-4'>
+            <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>Code</Th>
+              <Th>Name</Th>
+              <Th>Qty</Th>
+              <Th>Selling Price ( MMK )</Th>
+              <Th>Purchase Price ( MMK )</Th>
+              <Th>Action</Th>
+            </Tr>
+            </Thead>
+            <Tbody>
+            {accessory.map((acc,i) => (
+              <Tr>
+              <Td>{++i}</Td>
+              <Td>{acc.code}</Td>
+              <Td>{acc.accessoryItemName}</Td>
+              <Td><input type="number" placeholder={acc.currentQuantity} onDoubleClick={(e)=>changeA(acc._id,e.target.value,1)}/></Td>
+              <Td><input type="number" placeholder={acc.sellingPrice} onDoubleClick={(e)=>changeA(acc._id,e.target.value,2)}/></Td>
+              <Td><input type="number" placeholder={acc.purchasePrice} onDoubleClick={(e)=>changeA(acc._id,e.target.value,3)}/></Td>
               <Td><Btn className='btn btn-sm btn-primary'><MdDoubleArrow/></Btn></Td>
             </Tr>
             ))

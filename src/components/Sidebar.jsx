@@ -128,6 +128,16 @@ const routes= [
                 icon : <FaListUl/> ,
             },
             {
+                path : '/procedure_accessory',
+                name : 'Procedure Accessory', 
+                icon : <FaListUl/> ,
+            },
+            {
+                path : '/machinery',
+                name : 'Machinery List', 
+                icon : <FaListUl/> ,
+            },
+            {
                 path : '/treatment',
                 name : 'Treatment Create', 
                 icon : <FaRegRegistered/>   ,
