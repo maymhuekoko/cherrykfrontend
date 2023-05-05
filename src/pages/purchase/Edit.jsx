@@ -26,6 +26,18 @@ const Edit = () => {
         const res = await axios.get(url+'api/suppliers');
         setSuppliers(res.data.list);  
     }
+    const update = () => {
+        // const data = {
+        //     id:id,
+        //     code:code, 
+        //     name:name, 
+        //     description:description
+        //   }
+        //   axios.put(url+'api/purchase/',data)
+        //   .then(function (response){
+        //     window.location.reload(true);
+        //   })
+    }
   return (
     <div>
         <Nav/>
@@ -41,7 +53,7 @@ const Edit = () => {
         <div className='col-6'>
         <label htmlFor="">Supplier Name</label>
         <select name="" id="" className='form-control'>
-        <option value="">{purchase.supplierName}</option>
+        {/* <option value="">{purchase.supplierName.name}</option> */}
         {
             suppliers.map((sup,i)=>(
                 <option value={sup._id}>{sup.name}</option>
@@ -54,7 +66,7 @@ const Edit = () => {
             <textarea name=""  cols="30" rows="4" className='form-control' onChange={(e)=>setRemark(e.target.value)} value={remark}/>
         </div>
         <div className='offset-5 col-4 mt-4'>
-        <button className='btn btn-sm btn-primary'>Update</button>&nbsp;&nbsp;&nbsp;
+        <button className='btn btn-sm btn-primary' onClick={update}>Update</button>&nbsp;&nbsp;&nbsp;
         <button className='btn btn-sm btn-secondary'>Cancel</button>
         </div>
         </div>

@@ -118,7 +118,8 @@ const List = () => {
               <Tr>
               <Td>{++i}</Td>
               <Td>{purchase.date}</Td>
-              <Td>{purchase.supplierName.name}</Td>
+              {/* <Td>{purchase.supplierName.name}</Td> */}
+              <Td></Td>
               <Td>{purchase.totalQTY}</Td>
               <Td>{purchase.totalPrice}</Td>
               <Td>
