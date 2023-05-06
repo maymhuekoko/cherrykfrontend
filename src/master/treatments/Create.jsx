@@ -1,9 +1,11 @@
 import React,{useEffect,useState} from 'react'
 import Nav from "../../components/Navbar"
 import styled from 'styled-components'
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector} from 'react-redux';
+import {RxCross2} from 'react-icons/rx'
+import { GiMachineGun } from 'react-icons/gi';
 
 
 const Top = styled.div`
@@ -89,11 +91,24 @@ const Create = () => {
   const [items,setItems] = useState([]);
   const [isItem,setIsItem] = useState(false);
   const [id,setId] = useState('');
+  const [accitems,setAccItems] = useState([]);
+  const [isAccItem,setIsAccItem] = useState(false);
+  const [accid,setAccId] = useState('');
+  const [macitems,setMacItems] = useState([]);
+  const [isMacItem,setIsMacItem] = useState(false);
+  const [macid,setMacId] = useState('');
   const [totalPrice,setTotalPrice] = useState('');
   const [percent,setPercent] = useState('');
   const [sellPrice,setSellPrice] = useState('');
   const [description,setDescription] = useState('');
+  const [doctorname,setDoctorName] = useState('');
+  const [therapistname,setTherapistName] = useState('');
+  const [treatmenttime,setTreatmentTime] = useState('');
+  const [treatmentCode,setTreatmentCode] = useState('');
+  const [treatmentName,setTreatmentName] = useState('');
+  const navigate = useNavigate();
   const tname = useLocation().pathname.split('/')[4];
+  const name =  useLocation().pathname.split('/')[3];
   const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=>{
@@ -123,16 +138,62 @@ const Create = () => {
     const res = await axios.get(url+'api/fixed-assets');
     setMachines(res.data.list.filter((el) => el.type == 'Medical Equipment' || el.type == 'Surgery Equipment' || el.type == 'Medical Machinery'));
   }
-  const chgItem = async () =>{
+  const addProcedure =  () =>{
     const obj = {
       "item_id":id,
       "quantity":1,
       "perUsageQTY":1,
     }
     setItems( arr => [...arr, obj]);
-    console.log(3);
-    console.log(items);
     setIsItem(true);
+  }
+  const removeProcedure = (id) => {
+    setItems(items.filter((el)=>el.item_id != id));
+  }
+  const addAccProcedure =  () =>{
+    const obj = {
+      "item_id":accid,
+      "quantity":1,
+      "perUsageQTY":1,
+    }
+    setAccItems( arr => [...arr, obj]);
+    setIsAccItem(true);
+  }
+  const removeaccessory = (id) => {
+    setAccItems(accitems.filter((el)=>el.item_id != id));
+  }
+  const addMacProcedure =  () =>{
+    const obj = {
+      "item_id":macid,
+      "quantity":1,
+      "perUsageQTY":1,
+    }
+    setMacItems( arr => [...arr, obj]);
+    setIsMacItem(true);
+  }
+  const removeMac = (id) => {
+    setMacItems(macitems.filter((el)=>el.item_id != id));
+  }
+  const create = () => {
+    const data = {
+      "treatmentCode":treatmentCode, 
+      "treatmentName":name, 
+      "treatmentTimes":treatmenttime,
+      "relatedDoctor": doctorname,
+      "procedureMedicine":items,
+      "procedureAccessory":accitems,
+      "machine":macitems,
+      "estimateTotalPrice":totalPrice,
+      "discount":percent,
+      "sellingPrice":sellPrice,
+      "description":description,
+      "status":true
+      }
+      const res = axios.post(url+'api/treatment',data)
+       .then(function (response) {
+        // alert('success')
+        navigate(-1);
+       })
   }
   return (
     <div>
@@ -145,19 +206,19 @@ const Create = () => {
             <Div className='row'>
             <Div className='col-4 form-group '>
                 <Label>Treatment Unit Name<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setTreatmentName(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group'>
                 <Label>Treatment Unit Code<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setTreatmentCode(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group'>
                 <Label>Treatment Times<Span>*</Span></Label>
-                <Input type="text" className='form-control'/>
+                <Input type="text" className='form-control' onChange={(e)=>setTreatmentTime(e.target.value)}/>
             </Div>
             <Div className='col-4 form-group mt-3'>
                 <Label>Doctor Name<Span>*</Span></Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>setDoctorName(e.target.value)}>
                 <Option>Select Doctor</Option>
                 {
                   doctors.map((doctor,i)=>(
@@ -168,7 +229,7 @@ const Create = () => {
             </Div>
             <Div className='col-4 form-group mt-3'>
                 <Label>Therapist Name<Span>*</Span></Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>setTherapistName(e.target.value)}>
                 <Option>Select Therapist</Option>
                 {
                   therapists.map((therapist,i)=>(
@@ -189,7 +250,7 @@ const Create = () => {
                 </Select>
             </Div>
             <Div className='col-3 mt-3'>
-            <Button onClick={chgItem}>Add</Button>
+            <Button onClick={addProcedure}>Add</Button>
             </Div>
             <Div className='col-12 mt-3'>
             <Table className='table table-striped'>
@@ -201,29 +262,30 @@ const Create = () => {
               <Th>Purchase Price</Th>
               <Th>Per Usage Qty</Th>
               <Th>Amount</Th>
+              <Th></Th>
             </Tr>
             </Thead>
             {isItem && <Tbody>
-            {procedures.map((procedure,index)=>(
-                items.map((item,i)=>{
-                  procedure._id == item.item_id &&
-                  <Tr>
-                    <Td>{++i}</Td>
-                    <Td>{procedure.procedureItemName}</Td>
-                    <Td>1</Td>
-                    <Td>{procedure.purchasePrice}</Td>
-                    <Td>1</Td>
-                    <Td>{procedure.purchasePrice}</Td>
-                  </Tr>
-                })
-              ))
-            }
+                  {items.map((item,index)=>(
+                    procedures.map((procedure,i)=>(
+                      item.item_id == procedure._id &&
+                      <Tr>
+                      <Td>{++index}</Td>
+                      <Td>{procedure.procedureItemName}</Td>
+                      <Td>1</Td>
+                      <Td>{procedure.purchasePrice}</Td>
+                      <Td>1</Td>
+                      <Td>{procedure.purchasePrice}</Td>
+                      <Td><RxCross2 onClick={()=>removeProcedure(procedure._id)}/></Td>
+                      </Tr>
+                    ))
+                  ))}
             </Tbody>}
             </Table>
             </Div>
            <Div className='col-6 form-group mt-3'>
             <Label>Procedure Accessory</Label>
-            <Select className='form-control'>
+            <Select className='form-control' onChange={(e)=>setAccId(e.target.value)}>
             <Option>Select Procedure Accessory</Option>
             {
               accessories.map((accessory,index)=>(
@@ -233,7 +295,7 @@ const Create = () => {
             </Select>
           </Div>
             <Div className='col-3 mt-3'>
-            <Button>Add</Button>
+            <Button onClick={addAccProcedure}>Add</Button>
             </Div>
             <Div className='col-12 mt-3'>
             <Table className='table table-striped'>
@@ -247,21 +309,27 @@ const Create = () => {
               <Th>Amount</Th>
             </Tr>
             </Thead>
-            <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>Test</Td>
-              <Td>10</Td>
-              <Td>1000</Td>
-              <Td>1</Td>
-              <Td>1000</Td>
-            </Tr>
-            </Tbody>
+            {isAccItem && <Tbody>
+                  {accitems.map((accitem,index)=>(
+                    accessories.map((accessory,i)=>(
+                      accitem.item_id == accessory._id &&
+                      <Tr>
+                      <Td>{++index}</Td>
+                      <Td>{accessory.accessoryItemName}</Td>
+                      <Td>1</Td>
+                      <Td>{accessory.purchasePrice}</Td>
+                      <Td>1</Td>
+                      <Td>{accessory.purchasePrice}</Td>
+                      <Td><RxCross2 onClick={()=>removeaccessory(accessory._id)}/></Td>
+                      </Tr>
+                    ))
+                  ))}
+            </Tbody>}
             </Table>
             </Div>
             <Div className='col-6 form-group mt-3'>
                 <Label>Machine</Label>
-                <Select className='form-control'>
+                <Select className='form-control' onChange={(e)=>setMacId(e.target.value)}>
                 <Option>Select Machine</Option>
                 {
                   machines.map((machine,i)=>(
@@ -271,7 +339,7 @@ const Create = () => {
                 </Select>
             </Div>
             <Div className='col-3 mt-3'>
-            <Button>Add</Button>
+            <Button onClick={addMacProcedure}>Add</Button>
             </Div>
             <Div className='col-12 mt-3'>
             <Table className='table table-striped'>
@@ -285,16 +353,22 @@ const Create = () => {
               <Th>Amount</Th>
             </Tr>
             </Thead>
-            <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>Test</Td>
-              <Td>10</Td>
-              <Td>1000</Td>
-              <Td>1</Td>
-              <Td>1000</Td>
-            </Tr>
-            </Tbody>
+            {isMacItem && <Tbody>
+                  {macitems.map((macitem,index)=>(
+                    machines.map((machine,i)=>(
+                      macitem.item_id == machine._id &&
+                      <Tr>
+                      <Td>{++index}</Td>
+                      <Td>{machine.name}</Td>
+                      <Td>1</Td>
+                      <Td>{machine.initialPrice}</Td>
+                      <Td>1</Td>
+                      <Td>{machine.initialPrice}</Td>
+                      <Td><RxCross2 onClick={()=>removeMac(machine._id)}/></Td>
+                      </Tr>
+                    ))
+                  ))}
+            </Tbody>}
             </Table>
             </Div>
             <Div className='col-4 form-group mt-3'>
@@ -317,7 +391,7 @@ const Create = () => {
             </Div>
           <Top>
             <Center>
-                <Button>Save</Button>
+                <Button onClick={create}>Save</Button>
             </Center>
           </Top>
           </Div>
