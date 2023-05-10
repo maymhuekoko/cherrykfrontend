@@ -6,6 +6,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { Link,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector} from 'react-redux';
+import Patient from '../patients/Patient';
 
 const Top = styled.div`
 display : flex;
@@ -106,6 +107,7 @@ justify-content: flex-end;
 
 const AppointmentDetail = () => {
   const [patient,setPatient] = useState('');
+  const [img, setImg] = useState('');
   const [doctor,setDoctor] = useState('');
   const [isopen,setIsOpen] = useState(false);
   const [isCash,setIsCash] = useState(false);
@@ -156,6 +158,7 @@ const AppointmentDetail = () => {
   const getpatient = async () => {
     const res = await axios.get(url+'api/appointment/'+appointmentid);
     setPatient(res.data.data[0].relatedPatient);
+
     setDoctor(res.data.data[0].relatedDoctor);
     // setTreatmentName(res.data.treatment[0])
     // res.data.data[0].relatedTreatmentSelection.map((el)=>{
@@ -176,6 +179,7 @@ const AppointmentDetail = () => {
     setTreatmentId(id);
     setTotalAmount(res.data.data[0].sellingPrice)
   }
+
   const getPaymentMethod = (val) => {
     if(val == 'Credit'){
      document.getElementById('paid').value = 0;
@@ -190,6 +194,7 @@ const AppointmentDetail = () => {
     }
     setMethod(val);
   }
+  
   const storeTreatmentSelection = () => {
     var paid = document.getElementById('paid').value;
     const data = {
@@ -252,7 +257,7 @@ const AppointmentDetail = () => {
                 <h6>Member Status - {patient.patientStatus}</h6>
                 <h6>Occupation - {patient.occupation}</h6>
                 <h6>Gender - {patient.gender}</h6>
-                <h6>DOB - {patient.dateOfBirth}</h6>
+                <h6>DOB - {patient.dateOfBirth ? patient.dateOfBirth.split('T')[0] : ""}</h6>
             </Div>
             <Div className='col-12 mt-2'>
                 <But>Add Medicine History</But>
@@ -260,7 +265,8 @@ const AppointmentDetail = () => {
             </Div>
             </Div>
             <Div className='col-2'>
-              <Img src='' width='120' height='150'/>
+
+              <Img src={ patient.img ? url+'static/cherry-k'+patient.img.imgUrl: "../../default-profile.png"} width='120' height='150'/>
             </Div>
             </Div>
              <Div className='col-12 mt-2'>
@@ -307,12 +313,12 @@ const AppointmentDetail = () => {
                         <tbody>
                         {treat.relatedAppointments.map((app,index)=>(<tr className="text-center">
                             <th>{++index}</th>
-                            <th><Badge>Ongoing</Badge></th>
-                            <th>Date/Time</th>
-                            <th>No History</th>
+                            <th><Badge>{app.status? app.status: "Not Status"}</Badge></th>
+                            <th>{app.originalDate ? app.originalDate.split('T')[0]: "Not Found"}</th>
+                            <th>{app.history ? app.history : "No History"}</th>
                             <th>Medicine Sale Amount</th>
                             <th>Appointment Status</th>
-                            <th>Action</th>
+                            <th><Btn>Change Status</Btn></th>
                         </tr>))}
                         <tr>
                           <td colSpan='1'></td>
