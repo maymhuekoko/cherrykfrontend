@@ -219,7 +219,7 @@ const Sidebar = ({children}) => {
             initial='hidden'
             animate='show'
             exit='hidden'
-            className='logo'>Denovo</motion.h1>}
+            className='logo'>Clinic Denovo</motion.h1>}
             <div className="bars"><FaBars onClick={toggle}/></div>
         </div>
         <div className="search">

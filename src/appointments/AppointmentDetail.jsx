@@ -111,14 +111,19 @@ const AppointmentDetail = () => {
   const [isCash,setIsCash] = useState(false);
   const [leftAmount,setLeftAmount] = useState('');
   const [treatments,setTreatments] = useState([]);
+  const [lists,setLists] = useState([]);
   const [selections,setSelections] = useState([]);
   const [accounts,setAccounts] = useState([]);
+  const [tid,setTid] = useState('');
   const [accountings,setAccountings] = useState([]);
   const [treatmentCode,setTreatmentCode] = useState('');
   const [treatmentId,setTreatmentId] = useState('');
   const [totalAmount,setTotalAmount] = useState('');
+  const [treatmentTime,setTreatmentTime] = useState('');
   const [treatmentName,setTreatmentName] = useState('');
   const [method,setMethod] = useState('');
+  const [duration,setDuration] = useState('');
+  const [part,setPart] = useState('');
   const [bankacc,setBankAcc] = useState('');
   const url =  useSelector(state=>state.auth.url);
   const appointmentid = useLocation().pathname.split("/")[2];
@@ -130,7 +135,12 @@ const AppointmentDetail = () => {
         setTreatments(res.data.list);
       }catch(err){}
     };
-   
+    const getLists = async () =>{
+      try{
+        const res = await axios.get(url+'api/treatment-lists');
+        setLists(res.data.list);
+      }catch(err){}
+    };
     const getAccounts = async () =>{
       try{
         const res = await axios.get(url+'api/accounting-lists');
@@ -138,6 +148,7 @@ const AppointmentDetail = () => {
         setAccountings(res.data.list);
       }catch(err){}
     };
+    getLists();
     getAccounts();
     getTreatments();
     getpatient();
@@ -161,6 +172,7 @@ const AppointmentDetail = () => {
     const res = await axios.get(url+'api/treatment/'+id);
     // console.log(res.data.data[0].treatmentCode);
     setTreatmentCode(res.data.data[0].treatmentCode);
+    setTreatmentTime(res.data.data[0].treatmentTimes)
     setTreatmentId(id);
     setTotalAmount(res.data.data[0].sellingPrice)
   }
@@ -181,9 +193,22 @@ const AppointmentDetail = () => {
   const storeTreatmentSelection = () => {
     var paid = document.getElementById('paid').value;
     const data = {
-      paymentMethod:method,relatedBank:bankacc,appointment:appointmentid,
-      paidAmount:paid,totalAmount:totalAmount,relatedTreatment:treatmentId,
-      relatedPatient:patient._id,relatedDoctor:doctor._id,phone:patient.phone,
+    relatedPatient:patient._id,
+    originalDate:"2023-03-23T07:39:34.948Z",
+    relatedDoctor:doctor._id,
+    phone:patient.phone,
+    paymentMethod:method,
+    relatedBank: bankacc,
+    relatedCash:bankacc,
+    paidAmount:paid,
+    totalAmount:totalAmount,
+    relatedTreatment:treatmentId,
+    appointment:appointmentid,
+    selectionStatus:'Ongoing',
+    treatmentTimes:treatmentTime,
+    bodyParts:part, 
+    inBetweenDuration:duration,
+    relatedTreatmentUnit:tid
     }
     const res = axios.post(url+'api/treatment-selection',data)
      .then(function (response) {
@@ -246,7 +271,7 @@ const AppointmentDetail = () => {
               <Input type="text" className='form-control' style={{marginTop:'35px'}} placeholder="Search..."/>
               </Div>
               <Div className='col-3 mt-3'>
-              <But onClick={()=>setIsOpen(true)}>Start Procedure</But>
+              <But onClick={()=>setIsOpen(true)}>Select Treatment</But>
               </Div>
             </Div>
             <Table className='table table-hover mt-4'>
@@ -317,17 +342,49 @@ const AppointmentDetail = () => {
                 <Div className='card-body row'>
                   <Title>Treatment</Title>
                 <Div className='col-12 mt-2 form-group '>
-                <Label>Treatment Name<Span>*</Span></Label>
-                <Select className='form-control' onChange={(e)=>getTreatmentCode(e.target.value)}>
+                <Label>Body Part<Span>*</Span></Label>
+                <Select className='form-control' onChange={(e)=>setPart(e.target.value)}>
+                <Option>Select Part</Option>
+                <Option value='Face'>Face</Option>
+                <Option value='Body'>Body</Option>
+                <Option value='Body Injection'>Body Injection</Option>
+                </Select>
+                </Div>
+                <Div className='col-12 mt-2 form-group '>
+                <Label>Treatment  Name<Span>*</Span></Label>
+                <Select className='form-control' onChange={(e)=>setTid(e.target.value)}>
                 <Option>Select Treatment Name</Option>
-                {treatments.map((treatment,i)=>(
-                <Option value={treatment._id}>{treatment.treatmentName}</Option>
+                {lists.map((list,i)=>(
+                  list.bodyParts == part &&
+                <Option value={list._id}>{list.name}</Option>
                 ))}
                 </Select>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
+                <Label>Treatment Unit Name<Span>*</Span></Label>
+                <Select className='form-control' onChange={(e)=>getTreatmentCode(e.target.value)}>
+                <Option>Select Unit Name</Option>
+                {treatments.map((treatment,i)=>(
+                  treatment.treatmentName._id == tid &&
+                <Option value={treatment._id}>{treatment.treatmentName.name}</Option>
+                ))}
+                </Select>
+                </Div>
+                {/* <Div className='col-12 mt-2 form-group '>
                 <Label>Treatment Code<Span>*</Span></Label>
                 <Input type="text" className='form-control' value={treatmentCode}/>
+                </Div> */}
+                <Div className='col-12 mt-2 form-group '>
+                <Label>Treatment Times<Span>*</Span></Label>
+                <Input type="text" className='form-control' value={treatmentTime}/>
+                </Div>
+                <Div className='col-12 mt-2 form-group '>
+                <Label>Total Amount<Span>*</Span></Label>
+                <Input type="number" className='form-control' value={totalAmount}/>
+                </Div>
+                <Div className='col-12 mt-2 form-group '>
+                <Label>Duration<Span>*</Span></Label>
+                <Input type="number" className='form-control' onChange={(e)=>setDuration(e.target.value)}/>
                 </Div>
                 <Div className='col-12 mt-2 form-group '>
                 <Label>Payment Method<Span>*</Span></Label>
@@ -355,10 +412,7 @@ const AppointmentDetail = () => {
                 <Label>Left-Over Amount<Span>*</Span></Label>
                 <Input type="number" className='form-control' value={leftAmount}/>
                 </Div>
-                <Div className='col-12 mt-2 form-group '>
-                <Label>Total Amount<Span>*</Span></Label>
-                <Input type="number" className='form-control' value={totalAmount}/>
-                </Div>
+                
                 <Div className='col-6 mt-3'>
                 <But onClick={storeTreatmentSelection}>Submit</But>
                 </Div>

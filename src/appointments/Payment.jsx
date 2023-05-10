@@ -33,17 +33,16 @@ const Payment = () => {
   },[])
 
   const getSelection = async () =>{
-    const res =await axios.get(url+'api/patient-treatments');
-    console.log(res.data.data);
-    const filter = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount != 0);
-    const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
+    const res =await axios.get(url+'api/treatment-selections');
+    console.log(res.data.list);
+    const filter = res.data.list.filter((el)=>el.relatedPatient == patient_id && el.leftOverAmount != 0);
+    // const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
     setSelection(filter);
-    setSelectionDone(filterd);
+    // setSelectionDone(filterd);
   }
   const getRepayment = async () => {
     const res =await axios.get(url+'api/repayments');
     console.log('hoho')
-    console.log(res.data.list[0].relatedPateintTreatment._id);
     setRepayment(res.data.list)
   }
 
@@ -65,18 +64,15 @@ const Payment = () => {
     setHide1(!hide1);
     }
 }
+
   
   return (
     <div>
         <Nav/>
         <div className='card mt-5'>
             <div className='card-body'>
-            <Tabs>
-            <TabList>
-            <Tab>Outstanding</Tab>
-            <Tab>Well Done</Tab>
-            </TabList>
-            <div className='row mt-5'>
+            <h4 className='mt-2'>Treatment Payment Report</h4>
+            <div className='row mt-3'>
                 <div className='col-10'>
                 <div className='row form-group'>
                 <div className='col-4'>
@@ -97,15 +93,14 @@ const Payment = () => {
                 <input type="text" placeholder='Search....' className='form-control mt-4'/>
                 </div>
             </div>
-            <TabPanel>
-                <h4 className='mt-4'>Outstanding Report</h4>
+              
                 <table className='table table-hover mt-4'>
                 <thead>
                 <tr>
                 <td>#</td>
                 <td>treatment Unit Code</td>
                 <td>Status</td>
-                <td>Doctor Name</td>
+                {/* <td>Doctor Name</td> */}
                 <td>Times</td>
                 <td>Total Amount</td>
                 <td>Left-Over Amount</td>
@@ -117,14 +112,15 @@ const Payment = () => {
                 <>
                 <tr>
                 <td>{++i}</td>
-                <td>{select.relatedTreatment.treatmentName}</td>
-                <td><Badge>Ongoing</Badge></td>
-                <td>Test Dr.1</td>
-                <td>{select.relatedTreatment.treatmentTimes} Times</td>
-                <td>{select.relatedTreatment.sellingPrice}</td>
+                {
+                  select.relatedTreatment == null ? <td>-</td> : <td>{select.relatedTreatment.treatmentCode}</td>
+                }
+                <td><Badge>{select.selectionStatus}</Badge></td>
+                {/* <td>Test Dr.1</td> */}
+                <td>{select.treatmentTimes}</td>
+                <td>{select.totalAmount}</td>
                 <td>{select.leftOverAmount}</td>
                 <td>
-                <button className='btn btn-m btn-outline-primary'>Detail</button>&nbsp;
                 <button className='btn btn-m btn-outline-primary' onClick={()=>toggle(select._id)}>Related</button>&nbsp;
                 <button className='btn btn-m btn-outline-primary' onClick={()=>{setIsShow(true);setCredit(select.leftOverAmount);setPtId(select._id)}}>Repay</button>
                 </td>
@@ -139,17 +135,7 @@ const Payment = () => {
                     <th>Description</th>
                   </thead>
                   <tbody>
-                  {
-                    repayment.map((repay,i)=>(
-                      repay.relatedPateintTreatment._id == select._id && 
-                      <tr>
-                        <td>{++i}</td>
-                        <td>{repay.repaymentDate}</td>
-                        <td>{repay.repaymentAmount}</td>
-                        <td>{repay.description}</td>
-                      </tr>
-                    ))
-                  }
+                  
                   </tbody>
                   </table>
                 </td>
@@ -158,70 +144,7 @@ const Payment = () => {
                 ))}
                 </tbody>
                 </table>
-            </TabPanel>
-            <TabPanel>
-                <h4 className='mt-4'>Welldone Report</h4>
-                <table className='table table-hover mt-4'>
-                <thead>
-                <tr>
-                <td>#</td>
-                <td>treatment Unit Code</td>
-                <td>Status</td>
-                <td>Doctor Name</td>
-                <td>Times</td>
-                <td>Total Amount</td>
-                <td>Left-Over Amount</td>
-                <td>Action</td>
-                </tr>
-                </thead>
-                <tbody>
-                {selectiondone.map((selectd,i)=>(
-                  <>
-                <tr>
-                <td>{++i}</td>
-                <td>{selectd.relatedTreatment.treatmentName}</td>
-                <td><Badge>Ongoing</Badge></td>
-                <td>Test Dr.1</td>
-                <td>{selectd.relatedTreatment.treatmentTimes} Times</td>
-                <td>{selectd.relatedTreatment.sellingPrice}</td>
-                <td>{selectd.leftOverAmount}</td>
-                <td>
-                <button className='btn btn-m btn-outline-primary'>Detail</button>&nbsp;
-                <button className='btn btn-m btn-outline-primary' onClick={()=>toggle1(selectd._id)}>Related</button>&nbsp;
-                <button className='btn btn-m btn-outline-primary' onClick={()=>{setCredit(selectd.leftOverAmount);setPtId(selectd._id)}}>Confirm</button>
-                </td>
-                </tr>
-                <tr id={'toggle1'+selectd._id} hidden>
-                <td colSpan='8'>
-                  <table className='table table-striped'>
-                  <thead>
-                    <th>NO.</th>
-                    <th>Date</th>
-                    <th>Pay Amount</th>
-                    <th>Description</th>
-                  </thead>
-                  <tbody>
-                  {
-                    repayment.map((repay,j)=>(
-                      repay.relatedPateintTreatment._id == selectd._id && 
-                      <tr>
-                        <td>{++j}</td>
-                        <td>{repay.repaymentDate}</td>
-                        <td>{repay.repaymentAmount}</td>
-                        <td>{repay.description}</td>
-                      </tr>
-                    ))
-                  }
-                  </tbody>
-                  </table>
-                </td>
-                </tr>
-                 </>
-                ))}
-                </tbody>
-                </table>
-            </TabPanel>
-            </Tabs>
+           
             </div>
         </div>
         <RepayDialog open={isShow} close={()=>setIsShow(false)} patientTreatmentId={ptId} credit={credit}/>

@@ -15,6 +15,7 @@ import AppointmentDetail from './appointments/AppointmentDetail';
 import Patient from './patients/Patient';
 import PatientRegister from './patients/Register';
 import Treatment from './master/treatments/Treatment';
+import List from './master/treatments/List';
 import TreatmentCreate from './master/treatments/Create';
 import Member from './patients/Member';
 import PatientCredit from './patients/PatientCredit';
@@ -47,6 +48,7 @@ function App() {
         <Route path='/patient/member' element={<Member />} />
         <Route path='/patient/credit_list' element={<PatientCredit />} />
         <Route path='/treatment' element={<Treatment/>} />
+        <Route path='/treatment/list' element={<List/> }/>
         <Route path='/treatment/create/:id/:name' element={<TreatmentCreate/>} />
         <Route path='/medicine_sale/:aid/:tid' element={<MedicineSale />} />
         <Route path='/single_payment/:id' element={<Payment />} />

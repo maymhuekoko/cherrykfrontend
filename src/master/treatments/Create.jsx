@@ -178,8 +178,10 @@ const Create = () => {
     const data = {
       "treatmentCode":treatmentCode, 
       "treatmentName":name, 
+      'name' : treatmentName,
       "treatmentTimes":treatmenttime,
       "relatedDoctor": doctorname,
+      "reatedTherapist" : therapistname,
       "procedureMedicine":items,
       "procedureAccessory":accitems,
       "machine":macitems,
