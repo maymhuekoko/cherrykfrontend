@@ -40,6 +40,8 @@ const Brand = () => {
   const getCategories = async () =>{
     const res = await axios.get(url+'api/categories');
     setCategories(res.data.data)
+    console.log('ha');
+    console.log(res.data.data);
   }
   const getSubCategories = async () =>{
     const res = await axios.get(url+'api/sub-categories');
@@ -48,6 +50,8 @@ const Brand = () => {
   const getBrands = async () =>{
     const res = await axios.get(url+'api/brands');
     setBrands(res.data.data)
+    console.log('ho');
+    console.log(res.data.data);
   }
   const create = () => {
     const data = {
@@ -114,7 +118,9 @@ const Brand = () => {
               </tr>
             </thead>
             <tbody>
-              {brands.map((Brand,i)=>(<tr>
+              {brands.map((Brand,i)=>(
+                Brand.category.name &&
+              <tr>
                 <th scope="row">{++i}</th>
                 <td>{Brand.code}</td>
                 <td>{Brand.name}</td>

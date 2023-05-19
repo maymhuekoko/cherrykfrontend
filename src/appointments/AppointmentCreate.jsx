@@ -101,7 +101,7 @@ const AppointmentCreate = () => {
         }
         axios.post(url+'api/appointment',data)
         .then(function (response) {
-            alert('success')
+            // alert('success')
         })
       }else{
         const data = {
@@ -115,7 +115,7 @@ const AppointmentCreate = () => {
             email:patientEmail}
         axios.post(url+'api/appointment',data)
         .then(function (response) {
-            alert('success')
+            // alert('success')
         })
       }
         

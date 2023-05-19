@@ -21,6 +21,8 @@ const Payment = () => {
   const [selection,setSelection] = useState([]);
   const [selectiondone,setSelectionDone] = useState([]);
   const [repayment,setRepayment] = useState([]);
+  const [appointments,setAppointments] = useState([]);
+  const [tid,setTid] = useState('');
   const [ptId,setPtId] = useState('');
   const [credit,setCredit] = useState('');
   const [hide,setHide] = useState(false);
@@ -33,11 +35,16 @@ const Payment = () => {
   },[])
 
   const getSelection = async () =>{
-    const res =await axios.get(url+'api/treatment-selections');
-    console.log(res.data.list);
-    const filter = res.data.list.filter((el)=>el.relatedPatient == patient_id && el.leftOverAmount != 0);
+    const data = {
+      relatedPatient:patient_id,
+    }
+    axios.post(url+'api/treatment-selections/filter',data)
+     .then(function (response) {
+         console.log('success');
+         setSelection(response.data.data);
+     })
     // const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
-    setSelection(filter);
+    
     // setSelectionDone(filterd);
   }
   const getRepayment = async () => {
@@ -122,7 +129,7 @@ const Payment = () => {
                 <td>{select.leftOverAmount}</td>
                 <td>
                 <button className='btn btn-m btn-outline-primary' onClick={()=>toggle(select._id)}>Related</button>&nbsp;
-                <button className='btn btn-m btn-outline-primary' onClick={()=>{setIsShow(true);setCredit(select.leftOverAmount);setPtId(select._id)}}>Repay</button>
+                <button className='btn btn-m btn-outline-primary' onClick={()=>{setIsShow(true);setCredit(select.leftOverAmount);setPtId(select._id);setTid(select.relatedTreatment._id);setAppointments(select.relatedAppointments)}}>Repay</button>
                 </td>
                 </tr>
                 <tr id={'toggle'+select._id} hidden>
@@ -147,7 +154,7 @@ const Payment = () => {
            
             </div>
         </div>
-        <RepayDialog open={isShow} close={()=>setIsShow(false)} patientTreatmentId={ptId} credit={credit}/>
+        <RepayDialog open={isShow} close={()=>setIsShow(false)} patientTreatmentId={ptId} credit={credit} tid={tid} pid={patient_id} appointments={appointments}/>
     </div>
    
   )

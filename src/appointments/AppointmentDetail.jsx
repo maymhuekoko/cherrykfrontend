@@ -218,22 +218,6 @@ const AppointmentDetail = () => {
     const res = axios.post(url+'api/treatment-selection',data)
      .then(function (response) {
          console.log('success');
-         const data1 = {
-          relatedPatient:patient._id,
-          relatedTreatment: treatmentId,
-          leftOverAmount:leftAmount,
-          paidAmount:paid,
-          relatedTreatmentSelection:response.data.data._id,
-          fullyPaid:true,
-          }
-          const res = axios.post(url+'api/patient-treatment',data1)
-          .then(function (response) {
-            alert('successs');setTotalAmount(0);
-            setLeftAmount(0);
-            document.getElementById('paid').value = 0;
-            setIsOpen(false);
-            getpatient();
-          })
          
      })
   }
@@ -260,7 +244,8 @@ const AppointmentDetail = () => {
                 <h6>DOB - {patient.dateOfBirth ? patient.dateOfBirth.split('T')[0] : ""}</h6>
             </Div>
             <Div className='col-12 mt-2'>
-                <But>Add Medicine History</But>
+                <Link to={'/medicine-history/'+patient._id}><But>Add Medicine History</But></Link>
+                <Link to={'/procedure-history/'+patient._id}><But style={{marginLeft:'40px'}}>Add Procedure History</But></Link>
             </Div>
             </Div>
             </Div>

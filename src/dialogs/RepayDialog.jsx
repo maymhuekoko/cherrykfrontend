@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,8 +18,13 @@ const RepayDialog = (props) => {
   const [accounts,setAccounts] = useState([]);
   const [accountings,setAccountings] = useState([]);
   const [bankacc,setBankAcc] = useState('');
+  const [method,setMethod] = useState('');
+  const [aid,setAid] = useState();
+  const [isAppointment,setIsAppointment] = useState('');
+  const [isPrint,setIsPrint] = useState(false);
   const url =  useSelector(state=>state.auth.url);
   console.log(props.credit);
+  const navigate = useNavigate();
  
   useEffect(()=>{
     const getAccounts = async () =>{
@@ -32,28 +37,52 @@ const RepayDialog = (props) => {
     getAccounts();
   },[])
 
+  const getPaymentType = (type) => {
+    if(type == 1){
+      setIsAppointment(false);
+    }
+    if(type == 2){
+      setIsAppointment(true);
+    }
+  }
+
   const save = () =>{
     const data = {
-    remaningCredit:props.credit, 
-    description:description, 
-    relatedPateintTreatment:props.patientTreatmentId,
-    repaymentDate:date,
-    repaymentAmount:amount,
-    relatedBank:bankacc,
-    relatedCash:bankacc
+    paidAmount:amount,
+    relatedTreatment:props.tid, 
+    relatedAppointment:aid,
+    relatedPatient:props.pid,
+    relatedBank:bankacc, //must be bank acc from accounting accs
+    paymentType:method, //enum: ['Bank','Cash'],
+    relatedCash:bankacc, //must be cash acc from accounting accs
+    id:props.patientTreatmentId
     }
 
-    axios.post(url+'api/repayment',data)
+    axios.put(url+'api/treatment-selections/payment',data)
     .then(function (response) {
       setIsShow(false);
-      window.location.reload(true);
+      if(isPrint){
+        navigate('/voucher/'+response.data.treatmentVoucherResult._id);
+      }else{
+        window.location.reload(true);
+      }
+      // 
+      
      })
   }
   const getPaymentMethod = (val) => {
+    setMethod(val);
       if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash In Hand'))}
       if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash At Bank'))}
       setIsCash(true);
       document.getElementById('paid').value = 0;
+  }
+  const print = () =>{
+    if(document.getElementById('print').checked){
+      setIsPrint(true);
+    }else{
+      setIsPrint(false);
+    }
   }
   
   return (
@@ -63,12 +92,29 @@ const RepayDialog = (props) => {
         <DialogContent>
         <div className='row form-group'>
             <div className='col-12 mt-2 form-group '>
+            <label>Payment Type<span>*</span></label>
+            <select className='form-control' onChange={(e)=>getPaymentType(e.target.value)}>
+            <option>Select Payment Type</option>
+            <option value="1">Lumpsam</option>
+            <option value="2">By Appointment</option>
+            </select>
+            </div>
+            {isAppointment && <div className='col-12 mt-2 form-group'>
+            <label>Select Appointment<span>*</span></label>
+            <select className='form-control' onChange={(e)=>setAid(e.target.value)}>
+            <option>Select Appointment</option>
+            {props.appointments.map((app,i)=>(
+            <option value={app._id}>{app.originalDate}</option>
+            ))}
+            </select>
+            </div>}
+            <div className='col-12 mt-2 form-group '>
             <label>Payment Method<span>*</span></label>
             <select className='form-control' onChange={(e)=>getPaymentMethod(e.target.value)}>
             <option>Select Payment Method</option>
             {/* <option value="Credit">Credit</option> */}
-            <option value="Cash">Cash</option>
-            <option value='Bank'>Bank</option>
+            <option value="Cash Down">Cash Down</option>
+            <option value="Bank">Bank</option>
             </select>
             </div>
             {isCash && <div className='col-12 mt-2 form-group'>
@@ -80,6 +126,7 @@ const RepayDialog = (props) => {
             ))}
             </select>
             </div>}
+            
             <div className='col-12 mt-2'>
             <label htmlFor="">Pay Amount:</label>
             <input type="number" className='form-control' onChange={(e)=>setAmount(e.target.value)}/>
@@ -91,6 +138,10 @@ const RepayDialog = (props) => {
             <div className='col-12 mt-2'>
             <label htmlFor="">Pay Description:</label>
             <textarea className='form-control' onChange={(e)=>setDescription(e.target.value)}></textarea>
+            </div>
+            <div className='col-12 mt-2'>
+            <label htmlFor="">Print</label>
+            <input type="checkbox" className='ml-3' name="print"  id="print" onClick={print}/>
             </div>
         </div>
         </DialogContent>

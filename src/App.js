@@ -10,6 +10,8 @@ import Create from './pages/purchase/Create'
 import Supplier from './pages/supplier/List'
 import CreditDetail from './pages/supplier/Credit'
 import Appointment from './appointments/Appointment';
+import MedicineHistory from './appointments/MedicineHistory';
+import ProcedureHistory from './appointments/ProcedureHistory';
 import AppointmentCreate from './appointments/AppointmentCreate';
 import AppointmentDetail from './appointments/AppointmentDetail';
 import Patient from './patients/Patient';
@@ -22,6 +24,7 @@ import PatientCredit from './patients/PatientCredit';
 import Sidebar from './components/Sidebar';
 import MedicineSale from './pages/MedicineSale'
 import Payment from './appointments/Payment'
+import Voucher from './appointments/Voucher'
 import Payments from  './reports/Payments'
 import Category from './master/datas/Category';
 import SubCategory from './master/datas/SubCategory';
@@ -70,6 +73,9 @@ function App() {
         <Route path='/supplier' element={<Supplier/>} />
         <Route path='/machinery' element={<Machinery/>} />
         <Route path='/credit_detail/:id' element={<CreditDetail/>} />
+        <Route path='/voucher/:id' element={<Voucher />} />
+        <Route path='/medicine-history/:id' element={<MedicineHistory />} />
+        <Route path='/procedure-history/:id' element={<ProcedureHistory />} />
       </Routes>
       </Sidebar>  
   );
