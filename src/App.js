@@ -75,7 +75,7 @@ function App() {
         <Route path='/credit_detail/:id' element={<CreditDetail/>} />
         <Route path='/voucher/:id' element={<Voucher />} />
         <Route path='/medicine-history/:id' element={<MedicineHistory />} />
-        <Route path='/procedure-history/:id' element={<ProcedureHistory />} />
+        <Route path='/procedure-history/:tid/:aid' element={<ProcedureHistory />} />
       </Routes>
       </Sidebar>  
   );

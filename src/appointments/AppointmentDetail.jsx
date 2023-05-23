@@ -245,7 +245,7 @@ const AppointmentDetail = () => {
             </Div>
             <Div className='col-12 mt-2'>
                 <Link to={'/medicine-history/'+patient._id}><But>Add Medicine History</But></Link>
-                <Link to={'/procedure-history/'+patient._id}><But style={{marginLeft:'40px'}}>Add Procedure History</But></Link>
+
             </Div>
             </Div>
             </Div>
@@ -289,7 +289,9 @@ const AppointmentDetail = () => {
                 <Td>{treat.relatedAppointments.length}Times</Td>
                 <Td>{treat.totalAmount}</Td>
                 <Td>{treat.leftOverAmount}</Td>
-                <Td><Link to={'/single_payment/'+patient._id}><Btn>Payment</Btn></Link></Td>
+                <Td>
+                  <Link to={'/single_payment/'+patient._id}><Btn>Payment</Btn></Link>
+                </Td>
               </Tr>
               <tr>
                   <td colspan="10">
@@ -303,7 +305,10 @@ const AppointmentDetail = () => {
                             <th>{app.history ? app.history : "No History"}</th>
                             <th>Medicine Sale Amount</th>
                             <th>Appointment Status</th>
-                            <th><Btn>Change Status</Btn></th>
+                            <th>
+                              <Btn>Change Status</Btn>
+                              <Link to={'/procedure-history/'+treat._id+'/'+app._id}><Btn style={{marginLeft:'20px'}}>Add Procedure History</Btn></Link>
+                              </th>
                         </tr>))}
                         <tr>
                           <td colSpan='1'></td>
