@@ -5,7 +5,7 @@ import axios from 'axios'
 import { RxCross2 } from 'react-icons/rx'
 import Nav from "../../components/Navbar"
 import Swal from 'sweetalert2'
-
+import { useSelector } from 'react-redux'
 import { FaArrowLeft } from 'react-icons/fa'
 
 const Top = styled.div`
@@ -129,7 +129,7 @@ const Create = () => {
     }
     const getTherapists = async () => {
       const res = await axios.get(
-        'http://backendcherryk.kwintechnologykw1.com:4000/api/therapists'
+        url+'api/therapists'
       )
       setTherapists(res.data.data)
     }

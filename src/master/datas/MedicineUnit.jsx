@@ -329,7 +329,7 @@ function MedicineUnit () {
                     <div className='card-body bg-light'>
                       <HorizontalScroll>
                         <table id='' className='table'>
-                          <thead className='text-center bg-info'>
+                          <thead className='text-center'>
                             <tr>
                               <th>No</th>
                               <th>Code</th>
@@ -398,7 +398,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='text'
-                          class='form-control border-info'
+                          class='form-control'
                           name='codename'
                           id='code'
                           value={upCode}
@@ -411,7 +411,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='text'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='name'
                           value={upName}
@@ -424,7 +424,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='cur_qty'
                           value={upCurQTY}
@@ -437,7 +437,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='reorder'
                           value={upReOrder}
@@ -452,7 +452,7 @@ function MedicineUnit () {
                           <div className='col-md-6'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='from'
                               value={upFrom}
@@ -462,7 +462,7 @@ function MedicineUnit () {
                           <div className='col-md-6'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='to'
                               value={upTo}
@@ -480,7 +480,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='total'
                           value={upTotal}
@@ -493,7 +493,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='purchase'
                           value={upPur}
@@ -508,7 +508,7 @@ function MedicineUnit () {
                           <div className='col-md-12'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='sellprice'
                               value={upSell}
@@ -518,7 +518,7 @@ function MedicineUnit () {
                           {/* <div className="col-md-4">
                           <input
                             type="number"
-                            class="form-control border-info"
+                            class="form-control"
                             name="balance"
                             id="name"
                             placeholder="%"
@@ -557,7 +557,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='text'
-                          class='form-control border-info'
+                          class='form-control'
                           name='codename'
                           id='code'
                           //   ref={(el) => (this.name = el)}
@@ -570,7 +570,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='text'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='name'
                           //   ref={(el) => (this.name = el)}
@@ -583,7 +583,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='cur_qty'
                           //   ref={(el) => (this.name = el)}
@@ -596,7 +596,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='reorder'
                           //   ref={(el) => (this.name = el)}
@@ -611,7 +611,7 @@ function MedicineUnit () {
                           <div className='col-md-6'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='from'
                               placeholder='Form Unit'
@@ -621,7 +621,7 @@ function MedicineUnit () {
                           <div className='col-md-6'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='to'
                               placeholder='To Unit'
@@ -639,7 +639,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='total'
                           //   ref={(el) => (this.name = el)}
@@ -653,7 +653,7 @@ function MedicineUnit () {
                         </label>
                         <input
                           type='number'
-                          class='form-control border-info'
+                          class='form-control'
                           name='balance'
                           id='purchase'
                           //   ref={(el) => (this.name = el)}
@@ -668,7 +668,7 @@ function MedicineUnit () {
                           <div className='col-md-12'>
                             <input
                               type='number'
-                              class='form-control border-info'
+                              class='form-control'
                               name='balance'
                               id='sellprice'
                               onChange={e => setSellingPrice(e.target.value)}
@@ -677,7 +677,7 @@ function MedicineUnit () {
                           {/* <div className="col-md-4">
                           <input
                             type="number"
-                            class="form-control border-info"
+                            class="form-control"
                             name="balance"
                             id="name"
                             placeholder="%"

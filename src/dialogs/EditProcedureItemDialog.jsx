@@ -57,8 +57,8 @@ const EditProcedureItemDialog = (props) => {
             </div>
             <div className='col-12 mt-2'>
             <label htmlFor="">Brand:</label>
-            <select name="" id="" onChange={(e)=>setBrandId(e.target.value)} className='form-control'>
-                <option value={props.item.relatedBrand._id}>{props.item.relatedBrand.name}</option>
+            <select name="" id="" onChange={(e)=>setBrandId(e.target.value)} className='form-control' >
+                {/* <option value={props.item.relatedBrand._id}>{props.item.relatedBrand.name}</option> */}
                 {
                   brands.map((brand,j)=>(
                     <option value={brand._id}>{brand.name}</option>

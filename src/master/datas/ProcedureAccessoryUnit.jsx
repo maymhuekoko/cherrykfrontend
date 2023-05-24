@@ -1,200 +1,732 @@
-import React,{useState,useEffect} from 'react'
-import Nav from '../../components/Navbar'
-import styled from 'styled-components'
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import Swal from "sweetalert2";
+import React from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Nav from "../../components/Navbar"
+import { Link, useLocation } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import { useSelector } from 'react-redux'
+import { FaRegEdit, FaRegTrashAlt, FaArrowLeft } from 'react-icons/fa'
+import HorizontalScroll from 'react-horizontal-scrolling'
 
-const Button = styled.button`
-background: rgb(0,7,51);
-color: white; 
-justify-content: center;
-padding: 5px 10px;
-border:none;
-border-radius:10px;
-`
-
-const ProcedureMedicineUnit = () => {
-  const [code,setCode] = useState('');
-  const [name,setName] = useState('');
-  const [description,setDescription] = useState('');
-  const [currqty,setCurrQty] = useState('');
-  const [reqty,setReQty] = useState('');
-  const [from,setFrom] = useState('');
-  const [to,setTo] = useState('');
-  const [purchase,setPurchasePrice] = useState('');
-  const [sell,setSellPrice] = useState('');
-  const [percent,setPercent] = useState('');
-  const [units,setUnits] = useState([]);
+function Unit () {
+  const [proName, setProName] = useState('')
+  const [proUnitLists, setProUnitLists] = useState([])
+  const [code, setCode] = useState('')
+  const [name, setName] = useState('')
+  const [currentQuantity, setCurrentQuantity] = useState('')
+  const [reorder, setReorder] = useState('')
+  const [fromUnit, setFromUnit] = useState('')
+  const [toUnit, setToUnit] = useState('')
+  const [purchasePrice, setPurchasePrice] = useState('')
+  const [sellingPrice, setSellingPrice] = useState('')
+  const [totalUnit, setTotalUnit] = useState('')
+  const [description, setDescription] = useState('')
+  const [showUpdate, setShowUpdate] = useState(false)
   const url =  useSelector(state=>state.auth.url);
-  const itemid = useLocation().pathname.split('/')[2];
-  const itemname = useLocation().pathname.split('/')[3];
+  const [perUnit, setPerUnit] = useState('')
 
-  useEffect(()=>{
-    getUnits();
-  },[])
-  const getUnits = async () =>{
-    const res = await axios.get(url+'api/accessory-items/'+itemid);
-    console.log('hello')
-    // console.log(res.data.list.filter((el)=>el.name._id == '644a284ad6dfaa2aea5d89ca'));
-    setUnits(res.data.data);
-  }
-  const create = () =>{
-    const data={
-      code:code, 
-      name:itemid, 
-      accessoryItemName:name,
-      currentQuantity:currqty,
-      reOrderQuantity:reqty,
-      purchasePrice:purchase,
-      sellingPrice:sell,
-      description:description,
-      fromUnit:from,
-      toUnit:to,
-    }
-    axios.post(url+'api/accessory-item',data)
-    .then(function (response){
-      Swal.fire({
-        title: "Success",
-        text: "successfully Created Accessory Item!",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(function () {
-        window.location.reload(true);
+  const [upCode, setUpCode] = useState('')
+  const [upName, setUpName] = useState('')
+  const [upDesc, setUpDesc] = useState('')
+  const [upCurQTY, setUpCurQTY] = useState('')
+  const [upReOrder, setUpReOrder] = useState('')
+  const [upFrom, setUpFrom] = useState('')
+  const [upTo, setUpTo] = useState('')
+  const [upTotal, setUpTotal] = useState('')
+  const [upPur, setUpPur] = useState('')
+  const [upSell, setUpSell] = useState('')
+  const [Id, setId] = useState('')
+
+  const ProAccessId = useLocation().pathname.split('/')[2]
+
+  const handleDelete = event => {
+    console.log(event, 'delete')
+    axios
+      .delete(
+        url+'api/accessory-item/' +
+          event
+      )
+      .then(response => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Successfully Deleted!',
+          icon: 'success',
+          confirmButtonText: 'OK'
         })
-    }).catch(error =>{
-      Swal.fire({
-        title: "Error",
-        text: "Something Wrong!",
-        icon: "error",
-        confirmButtonText: "CANCEL",
+        const result = proUnitLists.filter(item => item._id !== event)
+        setProUnitLists(result)
       })
-    }) 
-  }
-  const delete1 = (id) => {
-    axios.delete(url+'api/accessory-item/'+id);
-    window.location.reload(true);
+      .catch(error => {
+        Swal.fire({
+          title: 'Error',
+          text: error.response.data.message,
+          icon: 'error',
+          confirmButtonText: 'CANCEL'
+        })
+      })
   }
 
+  const handleUpdate = event => {
+    console.log(event, 'event')
+    const getMedUnitUpdate = async () => {
+      try {
+        const res = await axios.get(
+          url+'api/accessory-item/' +
+            event
+        )
+
+        console.log(res.data.list, 'list')
+        setUpCode(res.data.data[0].code)
+        console.log(res.data.data[0].code, 'code')
+
+        setUpName(res.data.data[0].accessoryItemName)
+        setUpCurQTY(res.data.data[0].currentQuantity)
+        setUpReOrder(res.data.data[0].reOrderQuantity)
+        setUpFrom(res.data.data[0].fromUnit)
+        setUpTo(res.data.data[0].toUnit)
+        setUpTotal(res.data.data[0].totalUnit)
+        setUpPur(res.data.data[0].purchasePrice)
+        setUpSell(res.data.data[0].sellingPrice)
+        setUpDesc(res.data.data[0].description)
+      } catch (err) {}
+    }
+    getMedUnitUpdate()
+    setShowUpdate(true)
+    setId(event)
+  }
+
+  const handleUnitCalculation = event => {
+    console.log(currentQuantity)
+    console.log(event)
+
+    if (currentQuantity) {
+      let multi = currentQuantity * event
+      let ans = multi / fromUnit
+
+      setTotalUnit(ans.toFixed(2))
+    }
+
+    setToUnit(event)
+  }
+
+  const ProUnitUpdate = () => {
+    const data = {
+      id: Id,
+      name: ProAccessId,
+      code: upCode,
+      medicineItemName: upName,
+      currentQuantity: upCurQTY,
+      reOrderQuantity: upReOrder,
+      purchasePrice: upPur,
+      sellingPrice: upSell,
+      fromUnit: upFrom,
+      toUnit: upTo,
+      totalUnit: upTotal,
+      description: upDesc
+    }
+
+    const config = {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    axios
+      .put(
+        url+'api/accessory-item',
+        data,
+        config
+      )
+      .then(function (response) {
+        Swal.fire({
+          title: 'Successful!',
+          text: 'You Created Income Data!',
+          icon: 'success',
+
+          cancelButtonText: 'Close'
+        })
+        window.location.reload()
+
+        // setUnitLists([...unitLists,response.data.list[0]])
+
+        setProUnitLists(
+          proUnitLists.map(category => {
+            if (category._id === response.data.list._id) {
+              return response.data.list
+            } else {
+              return category
+            }
+          })
+        )
+      })
+    // .catch(function (err) {
+    //   Swal.fire({
+    //     title: 'Something Wrong!',
+    //     text: 'Try again, Please.',
+    //     icon: 'warning',
+    //     // showCancelButton: true,
+
+    //     cancelButtonText: 'Close'
+    //   })
+    // })
+    // document.getElementById('desc').value = ''
+    // document.getElementById('name').value = ''
+    // document.getElementById('code').value = ''
+  }
+
+  const handleUpdateUnitCalculation = event => {
+    console.log(upCurQTY)
+    console.log(event)
+
+    if (upCurQTY) {
+      let multi = upCurQTY * event
+      let ans = multi / upFrom
+
+      setUpTotal(ans.toFixed(2))
+    }
+
+    setUpTo(event)
+  }
+
+  const ProUnitCreate = () => {
+    const data = {
+      name: ProAccessId,
+      code: code,
+      perUnitQuantity: perUnit,
+      accessoryItemName: name,
+      currentQuantity: currentQuantity,
+      reOrderQuantity: reorder,
+      purchasePrice: purchasePrice,
+      sellingPrice: sellingPrice,
+      fromUnit: fromUnit,
+      toUnit: toUnit,
+      description: description
+    }
+
+    // console.log(medicineListId);
+    // alert(JSON.stringify(data));
+    // console.log(data)
+    const config = {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    axios
+      .post(
+        url+'api/accessory-item',
+        data,
+        config
+      )
+      .then(function (response) {
+        Swal.fire({
+          title: 'Successful!',
+          text: 'You Created Income Data!',
+          icon: 'success',
+
+          cancelButtonText: 'Close'
+        })
+        window.location.reload()
+
+        // setProUnitLists([...proUnitLists, response.data.list[0]])
+      })
+      .catch(function (err) {
+        Swal.fire({
+          title: 'Something Wrong!',
+          text: 'Try again, Please.',
+          icon: 'warning',
+          // showCancelButton: true,
+
+          cancelButtonText: 'Close'
+        })
+      })
+    // document.getElementById('description').value = ''
+    // document.getElementById('name').value = ''
+    // document.getElementById('code').value = ''
+    // document.getElementById('cur_qty').value = ''
+    // document.getElementById('reorder').value = ''
+    // document.getElementById('purchase').value = ''
+    // document.getElementById('per').value = ''
+    // document.getElementById('from').value = ''
+    // document.getElementById('to').value = ''
+    // document.getElementById('total').value = ''
+
+    // document.getElementById('sellprice').value = ''
+    // document.getElementById('total').value = ''
+
+    //      props.setOpen(false);
+  }
+  useEffect(() => {
+    const getUnitLists = async () => {
+      try {
+        const res = await axios.get(
+          url+'api/accessory-items/'+ProAccessId
+
+        )
+
+        // console.log(res.data.list.filter(e => e.name._id == ProAccessId))
+        setProUnitLists(res.data.data)
+
+        // setProUnitLists(res.data.list.filter(e => e.name._id == ProAccessId))
+      } catch (err) {}
+    }
+
+    const getProAccessLists = async () => {
+      console.log(ProAccessId)
+      try {
+        const res = await axios.get(
+          url+'api/procedure-accessory/' +
+            ProAccessId
+        )
+        console.log(res.data.data[0].name)
+        let proName = res.data.data[0].name
+        setProName(proName)
+      } catch (err) {
+        alert(err.message)
+      }
+    }
+
+    getProAccessLists()
+    getUnitLists()
+  }, [])
   return (
-    <div>
-        <Nav/>
-        <h5 className='font-weight-bold mt-3'>Procedure Medicine Unit List</h5>
-        <div className='row mt-3'>
-          <div className='col-9'>
-          <div className='card'>
-            <div className='card-body'>
-              <h6>{itemname}'s Unit</h6>
-            <div className='table-responsive'>
-            <table className="table table-hover" style={{width:'1200px'}}>
-            <thead>
-              <tr>
-              <th scope="col">#</th>
-                <th scope="col">Code</th>
-                <th scope="col">Name</th>
-                <th scope="col">Current Qty</th>
-                <th scope="col">Reorder Qty</th>
-                <th scope="col">Purchase Price</th>
-                <th scope="col">Selling Price</th>
-                <th scope="col">Unit Convention</th>
-                <th scope="col">Description</th>
-                <th scope='col'>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                units.map((unit,i)=>(
-                    <tr key={unit._id}>
-                     <td>{++i}</td>
-                     <td>{unit.code}</td>
-                     <td>{unit.procedureItemName}</td>
-                     <td>{unit.currentQuantity}</td>
-                     <td>{unit.reorderQuantity}</td>
-                     <td>{unit.purchasePrice}</td>
-                     <td>{unit.sellingPrice}</td>
-                     <td>1</td>
-                     <td>{unit.description}</td>
-                     <td>
-                    <IconButton aria-label="delete" onClick={()=>delete1(unit._id)}>
-                    <DeleteIcon className='text-danger'/>
-                    </IconButton>
-                    <IconButton aria-label="edit">
-                    <EditIcon className='text-warning'/>
-                    </IconButton>
-                    </td>
+    <div classNameName='App'>
+      {/* <!-- end preloader --> */}
+      {/* @include('sweet::alert') */}
 
-                    </tr>
-                ))
-              }
-            </tbody>
-          </table>
-          </div>
+      <div className='wrapper'>
+        {/* <!-- Navbar --> */}
+       
+        {/* <!-- /.navbar --> */}
+
+        {/* <!-- Main Sidebar Container --> */}
+        <Nav />
+
+        {/* <!-- Content Wrapper. Contains page content --> */}
+
+        <div className='content-wrapper'>
+          {/* <!-- Content Header (Page header) --> */}
+          <div className='content-header'>
+            <div className='container-fluid'>
+              <div className='row mb-2'>
+                <div className='col-sm-12'>
+                  <h5>Accessory Unit List</h5>
+                </div>
+              </div>
             </div>
           </div>
-          </div>
-          <div className='col-3'>
-          <div className='card'>
-            <div className='card-body'>
-               <div className='p-2'>
-              <h5>Create Item</h5>
-              <div class='row form-group mt-4'>
-              <label htmlFor="">Code</label>
-              <input type="text" className='form-control' onChange={(e)=>setCode(e.target.value)}/>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Name</label>
-              <input type="text" className='form-control' onChange={(e)=>setName(e.target.value)}/>
-              </div>
-              <div class='row form-group mt-4'>
-              <label htmlFor="">Current Quantity</label>
-              <input type="number" className='form-control' onChange={(e)=>setCurrQty(e.target.value)}/>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Reorder Quantity (optional)</label>
-              <input type="number" className='form-control' onChange={(e)=>setReQty(e.target.value)}/>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Unit Convertion (optional)</label>
-              <div className='col-7'>
-              <input type="number" className='form-control' placeholder='From' onChange={(e)=>setFrom(e.target.value)}/>
-              </div>
-              <div className='col-5'>
-              <input type="number" className='form-control' placeholder='To' onChange={(e)=>setTo(e.target.value)}/>
-              </div>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Purchase Price</label>
-              <input type="number" className='form-control' onChange={(e)=>setPurchasePrice(e.target.value)}/>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Selling Price</label>
-              <div className='col-7'>
-              <input type="number" className='form-control' onChange={(e)=>setSellPrice(e.target.value)}/>
-              </div>
-              <div className='col-5'>
-              <input type="number" className='form-control' placeholder='%' onChange={(e)=>setPercent(e.target.value)}/>
-              </div>
-              </div>
-              <div class='row form-group mt-2'>
-              <label htmlFor="">Description</label>
-              <textarea name="" id="" cols="30" rows="3" className='form-control' onChange={(e)=>setDescription(e.target.value)}></textarea>
-              </div>
-              <div className='row text-center mt-4'>
-              <Button onClick={create}>Save</Button>
-              </div>
-              </div>
-              
-            </div>
 
-          </div>
-          </div>
+          {/* <!-- Main content --> */}
+
+          <section className='content'>
+            <div className='container-fluid'>
+              <div className='row'>
+                <div className='col-9'>
+                  <div className='card'>
+                    <div className='card-header'>
+                      <h3 className='card-title'>{proName}'s Unit</h3>
+                    </div>
+                    <div className='card-body bg-light'>
+                      <HorizontalScroll>
+                        <table id='' className='table'>
+                          <thead className='text-center'>
+                            <tr>
+                              <th>No</th>
+                              <th>Code</th>
+                              <th>Name</th>
+                              <th>Current Qty</th>
+                              <th>Reorder Qty</th>
+                              <th>Purchase Price</th>
+                              <th>Selling Price</th>
+                              <th>Unit Convention</th>
+
+                              <th>Description</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+
+                          {proUnitLists.map((unit, i) => (
+                            <tbody className=''>
+                              <tr>
+                                <td>{++i}</td>
+                                <td>{unit.code}</td>
+                                <td>
+                                  {unit.accessoryItemName
+                                    ? unit.accessoryItemName
+                                    : 'No name'}
+                                </td>
+                                <td>
+                                  {unit.currentQuantity
+                                    ? unit.currentQuantity
+                                    : '0'}
+                                </td>
+                                <td>{unit.reOrderQuantity}</td>
+                                <td>{unit.purchasePrice}</td>
+                                <td>{unit.sellingPrice}</td>
+
+                                <td>{unit.toUnit ? unit.toUnit : '0'}</td>
+                                <td>{unit.description}</td>
+                                <td className='text-center'>
+                                  <button
+                                    onClick={e => handleUpdate(unit._id)}
+                                    className='btn btn-sm btn-warning'
+                                  >
+                                    <FaRegEdit />
+                                  </button>
+                                  &nbsp;
+                                  <button
+                                    className='btn btn-sm btn-danger'
+                                    onClick={e => handleDelete(unit._id)}
+                                  >
+                                    <FaRegTrashAlt />
+                                  </button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          ))}
+                        </table>
+                      </HorizontalScroll>
+                    </div>
+                  </div>
+                </div>
+
+                {showUpdate ? (
+                  <div className='col-md-3'>
+                    <div className='card px-3 py-3'>
+                      <h3 className='card-header mb-4 fw-5 text-secondary'>
+                        Update Item
+                      </h3>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Code
+                        </label>
+                        <input
+                          type='text'
+                          class='form-control'
+                          name='codename'
+                          id='code'
+                          value={upCode}
+                          onChange={e => setUpCode(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Name
+                        </label>
+                        <input
+                          type='text'
+                          class='form-control'
+                          name='balance'
+                          id='name'
+                          value={upName}
+                          onChange={e => setUpName(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Current Quantity
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='cur_qty'
+                          value={upCurQTY}
+                          onChange={e => setUpCurQTY(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Reorder Quantity (Optional)
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='reorder'
+                          value={upReOrder}
+                          onChange={e => setUpReOrder(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Unit Convention (Optional)
+                        </label>
+                        <div className='row'>
+                          <div className='col-md-6'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='from'
+                              value={upFrom}
+                              onChange={e => setUpFrom(e.target.value)}
+                            />
+                          </div>
+                          <div className='col-md-6'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='to'
+                              value={upTo}
+                              onChange={e =>
+                                handleUpdateUnitCalculation(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Total Unit
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='total'
+                          value={upTotal}
+                        />
+                      </div>
+
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Purchase Price
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='purchase'
+                          value={upPur}
+                          onChange={e => setUpPur(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Selling Price
+                        </label>
+                        <div className='row'>
+                          <div className='col-md-12'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='sellprice'
+                              value={upSell}
+                              onChange={e => setUpSell(e.target.value)}
+                            />
+                          </div>
+                          {/* <div className="col-md-4">
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="balance"
+                            id="name"
+                            placeholder="%"
+                          />
+                        </div> */}
+                        </div>
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Description
+                        </label>
+                        <textarea
+                          className='form-control'
+                          id='description'
+                          value={upDesc}
+                          onChange={e => setUpDesc(e.target.value)}
+                        ></textarea>
+                      </div>
+                      <button
+                        className='btn btn-primary form-control text-center fw-5'
+                        onClick={ProUnitUpdate}
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className='col-md-3'>
+                    <div className='card px-3 py-3'>
+                      <h3 className='card-header mb-4 fw-5 text-secondary'>
+                        Create Item
+                      </h3>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Code
+                        </label>
+                        <input
+                          type='text'
+                          class='form-control'
+                          name='codename'
+                          id='code'
+                          //   ref={(el) => (this.name = el)}
+                          onChange={e => setCode(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Name
+                        </label>
+                        <input
+                          type='text'
+                          class='form-control'
+                          name='balance'
+                          id='name'
+                          //   ref={(el) => (this.name = el)}
+                          onChange={e => setName(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Current Quantity
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='cur_qty'
+                          //   ref={(el) => (this.name = el)}
+                          onChange={e => setCurrentQuantity(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Reorder Quantity (Optional)
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='reorder'
+                          //   ref={(el) => (this.name = el)}
+                          onChange={e => setReorder(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Unit Convention (Optional)
+                        </label>
+                        <div className='row'>
+                          <div className='col-md-6'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='from'
+                              placeholder='Form Unit'
+                              onChange={e => setFromUnit(e.target.value)}
+                            />
+                          </div>
+                          <div className='col-md-6'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='to'
+                              placeholder='To Unit'
+                              onChange={e =>
+                                handleUnitCalculation(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Total Unit
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='total'
+                          //   ref={(el) => (this.name = el)}
+                          defaultValue={totalUnit}
+                        />
+                      </div>
+
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Purchase Price
+                        </label>
+                        <input
+                          type='number'
+                          class='form-control'
+                          name='balance'
+                          id='purchase'
+                          //   ref={(el) => (this.name = el)}
+                          onChange={e => setPurchasePrice(e.target.value)}
+                        />
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Selling Price
+                        </label>
+                        <div className='row'>
+                          <div className='col-md-12'>
+                            <input
+                              type='number'
+                              class='form-control'
+                              name='balance'
+                              id='sellprice'
+                              onChange={e => setSellingPrice(e.target.value)}
+                            />
+                          </div>
+                          {/* <div className="col-md-4">
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="balance"
+                            id="name"
+                            placeholder="%"
+                          />
+                        </div> */}
+                        </div>
+                      </div>
+                      <div class='form-group'>
+                        <label for='name' className='text-secondary'>
+                          Description
+                        </label>
+                        <textarea
+                          className='form-control'
+                          id='description'
+                          //   ref={(el) => (this.description = el)}
+                          onChange={e => setDescription(e.target.value)}
+                        ></textarea>
+                      </div>
+                      <button
+                        className='btn btn-primary form-control text-center fw-5'
+                        onClick={ProUnitCreate}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            {/*<!-- /.container-fluid --> */}
+          </section>
         </div>
+      </div>
+
+      {/* <!-- /.content-wrapper --> */}
+      <footer className='main-footer'>
+        <strong>
+          Copyright &copy; 2017-2020{' '}
+          <a href='http://www.kwintechnologies.com'>K-win Technology</a>.
+        </strong>
+        All rights reserved.
+      </footer>
+
+      {/* <!-- Control Sidebar --> */}
+      <aside classNameName='control-sidebar control-sidebar-dark'>
+        {/* <!-- Control sidebar content goes here --> */}
+      </aside>
+      {/* <!-- /.control-sidebar --> */}
+
+      {/* <!-- ./wrapper --> */}
     </div>
   )
 }
-
-export default ProcedureMedicineUnit
+export default Unit
