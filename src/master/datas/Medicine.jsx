@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddItemDialog from '../../dialogs/AddItemDialog'
+import EditItemDialog from '../../dialogs/EditItemDialog'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
@@ -82,6 +83,8 @@ const Option = styled.option`
 const Medicine = () => {
   const [items,setItems] = useState([]);
   const [isShow,setIsShow] = useState(false);
+  const [isEdit,setIsEdit] = useState(false);
+  const [itemid,setItemId] = useState('');
   const [isUnit,setIsUnit] = useState(false);
   const url =  useSelector(state=>state.auth.url);
 
@@ -94,6 +97,14 @@ const Medicine = () => {
     };
     getItems();
   },[]);
+  const delete1 = (id) => {
+    axios.delete(url+'api/medicine-list/'+id);
+    window.location.reload(true);
+  }
+  const edit1 = (id) => {
+    setIsEdit(true);
+    setItemId(id);
+  }
 
   return (
     <div>
@@ -129,10 +140,10 @@ const Medicine = () => {
               <Td>{item.description}</Td>
               <Td><Link to={'/medicine/'+item._id+'/'+item.name}><Button>Unit</Button></Link></Td>
               <Td>
-              <IconButton aria-label="delete">
+              <IconButton aria-label="delete" onClick={()=>delete1(item._id)}>
                 <DeleteIcon className='text-danger'/>
                 </IconButton>
-                <IconButton aria-label="edit">
+                <IconButton aria-label="edit" onClick={()=>edit1(item)}>
                 <EditIcon className='text-warning'/>
                 </IconButton>
               </Td>
@@ -144,6 +155,7 @@ const Medicine = () => {
           </Div>
          </Div>
          <AddItemDialog open={isShow} close={()=>setIsShow(false)}/>
+         <EditItemDialog open={isEdit} close={()=>setIsEdit(false)} item={itemid}/>
     </div>
   )
 }

@@ -75,6 +75,10 @@ const ProcedureMedicineUnit = () => {
       })
     }) 
   }
+  const delete1 = (id) => {
+    axios.delete(url+'api/procedure-item/'+id);
+    window.location.reload(true);
+  }
 
   return (
     <div>
@@ -115,7 +119,7 @@ const ProcedureMedicineUnit = () => {
                      <td>1</td>
                      <td>{unit.description}</td>
                      <td>
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={()=>delete1(unit._id)}>
                     <DeleteIcon className='text-danger'/>
                     </IconButton>
                     <IconButton aria-label="edit">

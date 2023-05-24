@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddProcedureItemDialog from '../../dialogs/AddProcedureItemDialog'
+import EditProcedureItemDialog from '../../dialogs/EditProcedureItemDialog'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
@@ -83,6 +84,8 @@ const ProcedureMedicine = () => {
   const [items,setItems] = useState([]);
   const [isShow,setIsShow] = useState(false);
   const [isUnit,setIsUnit] = useState(false);
+  const [isEdit,setIsEdit] = useState(false);
+  const [itemid,setItemId] = useState('');
   const url =  useSelector(state=>state.auth.url);
 
   useEffect(()=> {
@@ -94,6 +97,15 @@ const ProcedureMedicine = () => {
     };
     getItems();
   },[]);
+
+  const delete1 = (id) => {
+    axios.delete(url+'api/procedure-medicine/'+id);
+    window.location.reload(true);
+  }
+  const edit1 = (id) => {
+    setIsEdit(true);
+    setItemId(id);
+  }
 
   return (
     <div>
@@ -129,10 +141,10 @@ const ProcedureMedicine = () => {
               <Td>{item.description}</Td>
               <Td><Link to={'/procedure_medicine/'+item._id+'/'+item.name}><Button>Unit</Button></Link></Td>
               <Td>
-              <IconButton aria-label="delete">
+              <IconButton aria-label="delete" onClick={()=>delete1(item._id)}>
                 <DeleteIcon className='text-danger'/>
                 </IconButton>
-                <IconButton aria-label="edit">
+                <IconButton aria-label="edit" onClick={()=>edit1(item)}>
                 <EditIcon className='text-warning'/>
                 </IconButton>
               </Td>
@@ -144,6 +156,7 @@ const ProcedureMedicine = () => {
           </Div>
          </Div>
          <AddProcedureItemDialog open={isShow} close={()=>setIsShow(false)}/>
+         <EditProcedureItemDialog open={isShow} close={()=>setIsShow(false)} item={itemid}/>
     </div>
   )
 }
