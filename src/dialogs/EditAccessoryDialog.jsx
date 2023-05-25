@@ -11,10 +11,10 @@ import { useSelector} from 'react-redux';
 const EditAccessoryDialog = (props) => {
   const url =  useSelector(state=>state.auth.url);
   const [brands,setBrands] = useState([]);
-  const [brandid,setBrandId] = useState('');
-  const [code,setCode] = useState('');
-  const [name,setName] = useState('');
-  const [description,setDescription] = useState('');
+  const [brandid,setBrandId] = useState(props.item.relatedBrand);
+  const [code,setCode] = useState(props.item.code);
+  const [name,setName] = useState(props.item.name);
+  const [description,setDescription] = useState(props.item.description);
   const [isShow,setIsShow] = useState(true);
 
   useEffect(()=>{
@@ -58,7 +58,7 @@ const EditAccessoryDialog = (props) => {
             <div className='col-12 mt-2'>
             <label htmlFor="">Brand:</label>
             <select name="" id="" onChange={(e)=>setBrandId(e.target.value)} className='form-control'>
-                {/* <option value={props.item.relatedBrand._id}>{props.item.relatedBrand.name}</option> */}
+                {/* <option value={props.item.relatedBrand}></option> */}
                 {
                   brands.map((brand,j)=>(
                     <option value={brand._id}>{brand.name}</option>

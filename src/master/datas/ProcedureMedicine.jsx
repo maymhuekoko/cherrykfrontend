@@ -156,7 +156,7 @@ const ProcedureMedicine = () => {
           </Div>
          </Div>
          <AddProcedureItemDialog open={isShow} close={()=>setIsShow(false)}/>
-         <EditProcedureItemDialog open={isShow} close={()=>setIsShow(false)} item={itemid}/>
+         <EditProcedureItemDialog open={isEdit} close={()=>setIsShow(false)} item={itemid}/>
     </div>
   )
 }

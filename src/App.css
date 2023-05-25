@@ -60,7 +60,7 @@ main{
 .sidebar{
   background : rgb(0,7,51);
   color:white;
-  height: 97vh;
+  height: 200vh;
   position: sticky;
   top:0;
 }

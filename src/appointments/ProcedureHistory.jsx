@@ -98,27 +98,36 @@ const ProcudureHistory = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    const getItems = async () =>{
+    // const getItems = async () =>{
+    //   try{
+    //     const res = await axios.get(url+'api/procedure-medicines');
+    //     setPmedicine(res.data.list);
+    //   }catch(err){}
+    // };
+    const getMedicine = async () =>{
       try{
-        const res = await axios.get(url+'api/procedure-medicines');
-        setPmedicine(res.data.list);
+        const res = await axios.get(url+'api/treatment-selection/'+tselectionID);
+        setAmedicine(res.data.data[0].relatedTreatment.procedureMedicine);
+        setAaccessory(res.data.data[0].relatedTreatment.procedureAccessory);
+        setAmachine(res.data.data[0].relatedTreatment.machine);
       }catch(err){}
     };
-    const getItems1 = async () =>{
-      try{
-        const res = await axios.get(url+'api/procedure-accessories');
-        setPaccessory(res.data.list);
-      }catch(err){}
-    };
-    const getItems2 = async () =>{
-      try{
-        const res = await axios.get(url+'api/fixed-assets');
-        setPmachine(res.data.list.filter((el) => el.type == 'Medical Equipment' || el.type == 'Surgery Equipment' || el.type == 'Medical Machinery'));
-      }catch(err){}
-    };
-    getItems2();
-    getItems1();
-    getItems();
+    // const getItems1 = async () =>{
+    //   try{
+    //     const res = await axios.get(url+'api/procedure-accessories');
+    //     setPaccessory(res.data.list);
+    //   }catch(err){}
+    // };
+    // const getItems2 = async () =>{
+    //   try{
+    //     const res = await axios.get(url+'api/fixed-assets');
+    //     setPmachine(res.data.list.filter((el) => el.type == 'Medical Equipment' || el.type == 'Surgery Equipment' || el.type == 'Medical Machinery'));
+    //   }catch(err){}
+    // };
+    getMedicine();
+    // getItems2();
+    // getItems1();
+    // getItems();
   },[])
   const addSkin = () => {
     const obj = {
@@ -135,80 +144,62 @@ const ProcudureHistory = () => {
     cart.remark = qty;
     console.log(skincare);
   }
-  const addMedicine = () => {
 
-    const obj = {
-      "item_id": medicine.split('/')[0],
-      "stock": 1,
-      "actual": 0,
-      "name" : medicine.split('/')[1]
-    }
-    setAmedicine( arr => [...arr, obj]);
-  }
   const changeMedicine = (name,val,qty) => {
-    let cart = amedicine.find((el)=>el.name == name);
-    if(val == 1){
-     cart.actual = qty;
-    }
-    if(val == 2){
-      cart.remark = qty;
-    }
-  }
-  const removeMedicine = (name) => {
-    setAmedicine(amedicine.filter((el,i)=>el.name != name));
-  }
-  const addAccessory = () => {
-
+    console.log('change');
     const obj = {
-      "item_id": accessory.split('/')[0],
-      "stock": 1,
-      "actual": 0,
-      "name" : accessory.split('/')[1]
+      "item_id": name,
+      "stock": 20,
+      "actual": qty
     }
-    setAaccessory( arr => [...arr, obj]);
+    setPmedicine( arr => [...arr, obj]);
+    console.log(pmedicine);
+    // let cart = pmedicine.find((el)=>el.item_id == name);
+    // if(val == 1){
+    //  cart.actual = qty;
+    // }
+    // if(val == 2){
+    //   cart.remark = qty;
+    // }
   }
+
   const changeAccessory = (name,val,qty) => {
-    let cart = aaccessory.find((el)=>el.name == name);
-    if(val == 1){
-     cart.actual = qty;
-    }
-    if(val == 2){
-      cart.remark = qty;
-    }
-  }
-  const removeAccessory = (name) => {
-    setAaccessory(aaccessory.filter((el,i)=>el.name != name));
-  }
-  const addMachine = () => {
-
+    console.log('change');
     const obj = {
-      "item_id": machine.split('/')[0],
-      "stock": 1,
-      "actual": 0,
-      "name" : machine.split('/')[1]
+      "item_id": name,
+      "stock": 20,
+      "actual": qty
     }
-    setAmachine( arr => [...arr, obj]);
+    setPaccessory( arr => [...arr, obj]);
+    console.log(pmedicine);
+    // if(val == 2){
+    //   cart.remark = qty;
+    // }
   }
+
+
   const changeMachine = (name,val,qty) => {
-    let cart = amachine.find((el)=>el.name == name);
-    if(val == 1){
-     cart.actual = qty;
+    console.log('change');
+    const obj = {
+      "item_id": name,
+      "stock": 20,
+      "actual": qty
     }
-    if(val == 2){
-      cart.remark = qty;
-    }
+    setPmachine( arr => [...arr, obj]);
+    console.log(pmedicine);
+    // if(val == 2){
+    //   cart.remark = qty;
+    // }
   }
-  const removeMachine = (name) => {
-    setAmachine(amachine.filter((el,i)=>el.name != name));
-  }
+
   const saveExamination = () => {
     const data1 = {
       "usageStatus":"New", //'Finished','New' Frontend
       "relatedTreatmentSelection": tselectionID,
       "relatedAppointment": appointmentID,
-      "procedureMedicine": amachine,
-      "procedureAccessory": aaccessory,
-      "machine": amachine
+      "procedureMedicine": pmedicine,
+      // "procedureAccessory": paccessory,
+      // "machine": pmachine
     }
     axios.post(url+'api/logs/usage',data1)
      .then(function (response) {
@@ -254,7 +245,7 @@ const ProcudureHistory = () => {
                 <div className='col-10'>
                 <label htmlFor="">Medicine</label>
                 <select name="" id="" className='form-control' onChange={(e)=>setSkin(e.target.value)}>
-                <option value="">Choose Type</option> 
+                <option >Choose Type</option> 
                 <option value="Facial Cleaner">Facial Cleaner</option>
                 <option value="Toner">Toner</option>
                 <option value="SunCream">SunCream</option>
@@ -325,143 +316,69 @@ const ProcudureHistory = () => {
             <div className='col-6 mt-2'>
                 <div className='row'>
                 <div className='col-10'>
-                <label htmlFor="">Procedure Medicine</label>
-                <select name="" id="" className='form-control' onChange={(e)=>setMedicine(e.target.value)}>
-                <option value="">Choose Medicine</option> 
+                <h4>Procedure Medicine</h4>
+                {/* <select name="" id="" className='form-control' onChange={(e)=>setMedicine(e.target.value)}>
+                <option >Choose Medicine</option> 
                 {
                   pmedicine.map((med,i)=>(
                     <option value={med._id+'/'+med.name}>{med.name}</option>
                   ))
                 }
-                </select>
+                </select> */}
                 </div>
-                <div className='col-2'>
+                {/* <div className='col-2'>
                 <button className='btn btn-sm btn-primary' style={{marginTop:'30px'}} onClick={addMedicine}>+</button>
-                </div>
+                </div> */}
                 </div>
             
             </div>
             <div className='col-12'>
             <div className='row'>
+            <div className='col-2'>
+                <label htmlFor="">Name</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Total Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Perusage Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Actual Unit</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Remark</label>
+                </div>
+                <div className='col-1'>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
+                </div>
               { amedicine.map((amed,i)=>(
                 <>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder={amed.name}/>
+                <input type="text" className='form-control mt-3' value={amed.item_id}/>
                 </div>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Total Quantity"/>
+                <input type="text" className='form-control mt-3' value={amed.quantity}/>
                 </div>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Perusage Quantity"/>
+                <input type="text" className='form-control mt-3' value={amed.perUsageQTY}/>
                 </div>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Actual Unit" onChange={(e)=>changeMedicine(amed.name,1,e.target.value)}/>
+                <input type="text" className='form-control mt-3'  onChange={(e)=>changeMedicine(amed.item_id,1,e.target.value)}/>
                 </div>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Remark" onChange={(e)=>changeMedicine(amed.name,2,e.target.value)}/>
+                <input type="text" className='form-control mt-3'/>
                 </div>
                 <div className='col-1'>
-                <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
                 </div>
                 
                 </>
                 ))}
               </div>
             </div>
-            <div className='col-6 mt-2'>
-                <div className='row'>
-                <div className='col-10'>
-                <label htmlFor="">Procedure Accessories</label>
-                <select name="" id="" className='form-control' onChange={(e)=>setAccessory(e.target.value)}>
-                <option value="">Choose Accessories</option> 
-                {
-                  paccessory.map((acc,i)=>(
-                    <option value={acc._id+'/'+acc.name}>{acc.name}</option>
-                  ))
-                }
-                
-                </select>
-                </div>
-                <div className='col-2'>
-                <button className='btn btn-sm btn-primary' style={{marginTop:'30px'}} onClick={addAccessory}>+</button>
-                </div>
-                </div>
             
-            </div>
-            <div className='col-12'>
-            <div className='row'>
-              { aaccessory.map((acc,i)=>(
-                <>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder={acc.name}/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Total Quantity"/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Perusage Quantity"/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Actual Unit" onChange={(e)=>changeAccessory(acc.name,1,e.target.value)}/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Remark" onChange={(e)=>changeAccessory(acc.name,2,e.target.value)}/>
-                </div>
-                <div className='col-1'>
-                <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeAccessory(acc.name)}>-</button>
-                </div>
-                
-                </>
-                ))}
-              </div>
-            </div>
-            <div className='col-6 mt-2'>
-                <div className='row'>
-                <div className='col-10'>
-                <label htmlFor="">Machinery</label>
-                <select name="" id="" className='form-control' onChange={(e)=>setMachine(e.target.value)}>
-                <option value="">Choose Machiney</option> 
-                {
-                  pmachine.map((mac,i)=>(
-                    <option value={mac._id+'/'+mac.name}>{mac.name}</option>
-                  ))
-                }
-                
-                </select>
-                </div>
-                <div className='col-2'>
-                <button className='btn btn-sm btn-primary' style={{marginTop:'30px'}} onClick={addMachine}>+</button>
-                </div>
-                </div>
-            
-            </div>
-            <div className='col-12'>
-            <div className='row'>
-              { amachine.map((mac,i)=>(
-                <>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder={mac.name}/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Total Quantity"/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Perusage Quantity"/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Actual Unit" onChange={(e)=>changeMachine(mac.name,1,e.target.value)}/>
-                </div>
-                <div className='col-2'>
-                <input type="text" className='form-control mt-3' placeholder="Remark" onChange={(e)=>changeMachine(mac.name,2,e.target.value)}/>
-                </div>
-                <div className='col-1'>
-                <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMachine(mac.name)}>-</button>
-                </div>
-                
-                </>
-                ))}
-              </div>
-            </div>
+           
             <div className="mt-5 offset-5">
             <button className="btn btn-sm btn-primary" onClick={saveExamination}>Submit</button>
             </div>

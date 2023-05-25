@@ -38,9 +38,9 @@ const Payment = () => {
     const data = {
       relatedPatient:patient_id,
     }
-    axios.post(url+'api/treatment-selections/filter',data)
+    axios.post(url+'api/treatment-vouchers/filter',data)
      .then(function (response) {
-         console.log('success');
+         console.log(response.data.data);
          setSelection(response.data.data);
      })
     // const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);

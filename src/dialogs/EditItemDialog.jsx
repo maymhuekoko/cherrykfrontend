@@ -11,10 +11,10 @@ import { useSelector} from 'react-redux';
 const EditItemDialog = (props) => {
   const url =  useSelector(state=>state.auth.url);
   const [brands,setBrands] = useState([]);
-  const [brandid,setBrandId] = useState('');
-  const [code,setCode] = useState('');
-  const [name,setName] = useState('');
-  const [description,setDescription] = useState('');
+  const [brandid,setBrandId] = useState(props.item.relatedBrand);
+  const [code,setCode] = useState(props.item.code);
+  const [name,setName] = useState(props.item.name);
+  const [description,setDescription] = useState(props.item.description);
   const [isShow,setIsShow] = useState(true);
 
   useEffect(()=>{

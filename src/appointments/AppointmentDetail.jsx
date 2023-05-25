@@ -173,7 +173,8 @@ const AppointmentDetail = () => {
   }
   const getTreatmentCode = async (id) => {
     const res = await axios.get(url+'api/treatment/'+id);
-    // console.log(res.data.data[0].treatmentCode);
+    console.log('hi');
+    console.log(res.data.data[0]);
     setTreatmentCode(res.data.data[0].treatmentCode);
     setTreatmentTime(res.data.data[0].treatmentTimes)
     setTreatmentId(id);
@@ -306,7 +307,7 @@ const AppointmentDetail = () => {
                             <th>Medicine Sale Amount</th>
                             <th>Appointment Status</th>
                             <th>
-                              <Btn>Change Status</Btn>
+                              {/* <Btn>Change Status</Btn> */}
                               <Link to={'/procedure-history/'+treat._id+'/'+app._id}><Btn style={{marginLeft:'20px'}}>Add Procedure History</Btn></Link>
                               </th>
                         </tr>))}

@@ -91,15 +91,15 @@ const RepayDialog = (props) => {
         <DialogTitle  className='text-center'><b>Patient Credit Detail</b></DialogTitle>
         <DialogContent>
         <div className='row form-group'>
-            <div className='col-12 mt-2 form-group '>
+            {/* <div className='col-12 mt-2 form-group '>
             <label>Payment Type<span>*</span></label>
             <select className='form-control' onChange={(e)=>getPaymentType(e.target.value)}>
             <option>Select Payment Type</option>
             <option value="1">Lumpsam</option>
             <option value="2">By Appointment</option>
             </select>
-            </div>
-            {isAppointment && <div className='col-12 mt-2 form-group'>
+            </div> */}
+            <div className='col-12 mt-2 form-group'>
             <label>Select Appointment<span>*</span></label>
             <select className='form-control' onChange={(e)=>setAid(e.target.value)}>
             <option>Select Appointment</option>
@@ -107,7 +107,7 @@ const RepayDialog = (props) => {
             <option value={app._id}>{app.originalDate}</option>
             ))}
             </select>
-            </div>}
+            </div>
             <div className='col-12 mt-2 form-group '>
             <label>Payment Method<span>*</span></label>
             <select className='form-control' onChange={(e)=>getPaymentMethod(e.target.value)}>
