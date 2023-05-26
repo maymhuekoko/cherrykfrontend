@@ -18,10 +18,14 @@ border-radius:4px;
 const Payment = () => {
   const [isShow,setIsShow] = useState(false);
   const patient_id = useLocation().pathname.split('/')[2];
+  const treatment_selection_id = useLocation().pathname.split('/')[3];
   const [selection,setSelection] = useState([]);
+  const [select,setSelect] = useState([]);
   const [selectiondone,setSelectionDone] = useState([]);
   const [repayment,setRepayment] = useState([]);
+  const [tamount,setTamount] = useState(0);
   const [appointments,setAppointments] = useState([]);
+  const [pmethod, setPmethod] = useState('');
   const [tid,setTid] = useState('');
   const [ptId,setPtId] = useState('');
   const [credit,setCredit] = useState('');
@@ -31,6 +35,7 @@ const Payment = () => {
   
   useEffect(()=>{
    getSelection();
+   getSelect();
    getRepayment()
   },[])
 
@@ -40,8 +45,22 @@ const Payment = () => {
     }
     axios.post(url+'api/treatment-vouchers/filter',data)
      .then(function (response) {
-         console.log(response.data.data);
-         setSelection(response.data.data);
+      
+         setSelection(response.data.data.filter((el)=>el.relatedTreatmentSelection._id  == treatment_selection_id));
+     })
+    // const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
+    
+    // setSelectionDone(filterd);
+  }
+   const getSelect = async () =>{
+    const data = {
+      relatedPatient:patient_id,
+    }
+    axios.post(url+'api/treatment-selections/filter',data)
+     .then(function (response) {
+      console.log('select');
+      console.log(response.data.data);
+         setSelect(response.data.data.filter((el)=>el._id  == treatment_selection_id));
      })
     // const filterd = res.data.list.filter((el)=>el.relatedPatient._id == patient_id && el.leftOverAmount == 0);
     
@@ -100,53 +119,39 @@ const Payment = () => {
                 <input type="text" placeholder='Search....' className='form-control mt-4'/>
                 </div>
             </div>
-              
+            <div className='row'> 
+            <div className='offset-10'>  
+            <button className='btn btn-m btn-outline-primary  mt-3' onClick={()=>{setIsShow(true);setCredit(select[0].leftOverAmount);setPtId(select[0]._id);setTid(select[0].relatedTreatment._id);setAppointments(select[0].relatedAppointments);setPmethod(select[0].paymentMethod);setTamount(select[0].totalAmount)}}>Repayment</button>
+            </div>
+            
+            </div>
+            
                 <table className='table table-hover mt-4'>
                 <thead>
                 <tr>
                 <td>#</td>
-                <td>treatment Unit Code</td>
-                <td>Status</td>
+                <td>Code</td>
+                <td>Amount</td>
                 {/* <td>Doctor Name</td> */}
-                <td>Times</td>
-                <td>Total Amount</td>
-                <td>Left-Over Amount</td>
-                <td>Action</td>
+                <td>Pay Method</td>
+                <td>Type</td>
+                <td>Date</td>
+                {/* <td></td> */}
                 </tr>
                 </thead>
                 <tbody>
-                {selection.map((select,i)=>(
+                {selection.map((sel,i)=>(
                 <>
                 <tr>
                 <td>{++i}</td>
-                {
-                  select.relatedTreatment == null ? <td>-</td> : <td>{select.relatedTreatment.treatmentCode}</td>
-                }
-                <td><Badge>{select.selectionStatus}</Badge></td>
+                <td>{sel.code}</td>
+                <td>{sel.amount}</td>
                 {/* <td>Test Dr.1</td> */}
-                <td>{select.treatmentTimes}</td>
-                <td>{select.totalAmount}</td>
-                <td>{select.leftOverAmount}</td>
-                <td>
-                <button className='btn btn-m btn-outline-primary' onClick={()=>toggle(select._id)}>Related</button>&nbsp;
-                <button className='btn btn-m btn-outline-primary' onClick={()=>{setIsShow(true);setCredit(select.leftOverAmount);setPtId(select._id);setTid(select.relatedTreatment._id);setAppointments(select.relatedAppointments)}}>Repay</button>
-                </td>
+                <td>{sel.paymentMethod}</td>
+                <td>{sel.paymentType}</td>
+                <td>{sel.createdAt}</td>     
                 </tr>
-                <tr id={'toggle'+select._id} hidden>
-                <td colSpan='8'>
-                  <table className='table table-striped'>
-                  <thead>
-                    <th>NO.</th>
-                    <th>Date</th>
-                    <th>Pay Amount</th>
-                    <th>Description</th>
-                  </thead>
-                  <tbody>
-                  
-                  </tbody>
-                  </table>
-                </td>
-                </tr>
+                
                   </>
                 ))}
                 </tbody>
@@ -154,7 +159,7 @@ const Payment = () => {
            
             </div>
         </div>
-        <RepayDialog open={isShow} close={()=>setIsShow(false)} patientTreatmentId={ptId} credit={credit} tid={tid} pid={patient_id} appointments={appointments}/>
+        <RepayDialog open={isShow} close={()=>setIsShow(false)} patientTreatmentId={ptId} credit={credit} tid={tid} pid={patient_id} appointments={appointments} method={pmethod} total={tamount}/>
     </div>
    
   )

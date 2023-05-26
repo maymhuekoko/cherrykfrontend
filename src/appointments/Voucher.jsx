@@ -71,7 +71,7 @@ const Voucher = () => {
                                     <td>{treat.relatedTreatment.treatmentName}</td>
                                     <td>{treat.relatedTreatment.sellingPrice}</td>
                                     <td>{treat.amount}</td>
-                                    <td>400000</td>
+                                    <td>100000</td>
                                 </tr>))}
                         </tbody>
                     </table>

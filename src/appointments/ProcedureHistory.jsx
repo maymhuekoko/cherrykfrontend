@@ -107,6 +107,7 @@ const ProcudureHistory = () => {
     const getMedicine = async () =>{
       try{
         const res = await axios.get(url+'api/treatment-selection/'+tselectionID);
+        console.log(res.data.data[0].relatedTreatment.machine);
         setAmedicine(res.data.data[0].relatedTreatment.procedureMedicine);
         setAaccessory(res.data.data[0].relatedTreatment.procedureAccessory);
         setAmachine(res.data.data[0].relatedTreatment.machine);
@@ -198,8 +199,8 @@ const ProcudureHistory = () => {
       "relatedTreatmentSelection": tselectionID,
       "relatedAppointment": appointmentID,
       "procedureMedicine": pmedicine,
-      // "procedureAccessory": paccessory,
-      // "machine": pmachine
+      "procedureAccessory": paccessory,
+      "machine": pmachine
     }
     axios.post(url+'api/logs/usage',data1)
      .then(function (response) {
@@ -210,7 +211,7 @@ const ProcudureHistory = () => {
         confirmButtonText: "OK",
       }).then(function () {
         // alert('success')
-        navigate('/medicine-history/'+tselectionID+'/'+appointmentID)
+        navigate(-1);
         })
      })
   }
@@ -317,20 +318,8 @@ const ProcudureHistory = () => {
                 <div className='row'>
                 <div className='col-10'>
                 <h4>Procedure Medicine</h4>
-                {/* <select name="" id="" className='form-control' onChange={(e)=>setMedicine(e.target.value)}>
-                <option >Choose Medicine</option> 
-                {
-                  pmedicine.map((med,i)=>(
-                    <option value={med._id+'/'+med.name}>{med.name}</option>
-                  ))
-                }
-                </select> */}
                 </div>
-                {/* <div className='col-2'>
-                <button className='btn btn-sm btn-primary' style={{marginTop:'30px'}} onClick={addMedicine}>+</button>
-                </div> */}
-                </div>
-            
+                </div> 
             </div>
             <div className='col-12'>
             <div className='row'>
@@ -353,9 +342,10 @@ const ProcudureHistory = () => {
                 {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
                 </div>
               { amedicine.map((amed,i)=>(
+                amed.item_id != null &&
                 <>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3' value={amed.item_id}/>
+                <input type="text" className='form-control mt-3' value={amed.item_id.procedureItemName}/>
                 </div>
                 <div className='col-2'>
                 <input type="text" className='form-control mt-3' value={amed.quantity}/>
@@ -364,7 +354,7 @@ const ProcudureHistory = () => {
                 <input type="text" className='form-control mt-3' value={amed.perUsageQTY}/>
                 </div>
                 <div className='col-2'>
-                <input type="text" className='form-control mt-3'  onChange={(e)=>changeMedicine(amed.item_id,1,e.target.value)}/>
+                <input type="text" className='form-control mt-3'  onChange={(e)=>changeMedicine(amed.item_id._id,1,e.target.value)}/>
                 </div>
                 <div className='col-2'>
                 <input type="text" className='form-control mt-3'/>
@@ -377,7 +367,112 @@ const ProcudureHistory = () => {
                 ))}
               </div>
             </div>
-            
+            <div className='col-6 mt-2'>
+                <div className='row'>
+                <div className='col-10'>
+                <h4>Procedure Accessory</h4>
+                </div>
+                </div> 
+            </div>
+            <div className='col-12'>
+            <div className='row'>
+            <div className='col-2'>
+                <label htmlFor="">Name</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Total Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Perusage Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Actual Unit</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Remark</label>
+                </div>
+                <div className='col-1'>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
+                </div>
+              { aaccessory.map((acc,i)=>(
+                acc.item_id != null &&
+                <>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={acc.item_id.accessoryItemName}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={acc.quantity}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={acc.perUsageQTY}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3'  onChange={(e)=>changeAccessory(acc.item_id._id,1,e.target.value)}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3'/>
+                </div>
+                <div className='col-1'>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
+                </div>
+                
+                </>
+                ))}
+              </div>
+            </div>
+            <div className='col-6 mt-2'>
+                <div className='row'>
+                <div className='col-10'>
+                <h4>Machine</h4>
+                </div>
+                </div> 
+            </div>
+            <div className='col-12'>
+            <div className='row'>
+            <div className='col-2'>
+                <label htmlFor="">Name</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Total Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Perusage Quantity</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Actual Unit</label>
+                </div>
+                <div className='col-2'>
+                <label htmlFor="">Remark</label>
+                </div>
+                <div className='col-1'>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
+                </div>
+              { amachine.map((mac,i)=>(
+                mac.item_id != null &&
+                <>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={mac.item_id.name}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={mac.quantity}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3' value={mac.perUsageQTY}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3'  onChange={(e)=>changeMachine(mac.item_id._id,1,e.target.value)}/>
+                </div>
+                <div className='col-2'>
+                <input type="text" className='form-control mt-3'/>
+                </div>
+                <div className='col-1'>
+                {/* <button className='btn btn-sm btn-danger' style={{marginTop:'20px'}} onClick={()=>removeMedicine(amed.name)}>-</button> */}
+                </div>
+                
+                </>
+                ))}
+              </div>
+            </div>
            
             <div className="mt-5 offset-5">
             <button className="btn btn-sm btn-primary" onClick={saveExamination}>Submit</button>

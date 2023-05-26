@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import ReactBigCalendar from './ReactBigCalendar';
 import axios from 'axios';
 import { useSelector} from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Left = styled.div`
 font-weight : normal;
@@ -63,7 +64,7 @@ const AppointmentCreate = () => {
     const [time,setTime] = useState('');
     const [patients,setPatients] = useState([]);
     const url =  useSelector(state=>state.auth.url);
-
+    const navigate = useNavigate();
 
     useEffect(()=>{
         getDoctors();
@@ -93,7 +94,7 @@ const AppointmentCreate = () => {
       if(patientStatus == 'Old'){
         const data = { 
         relatedDoctor:doctorId,
-        date: date,
+        originalDate: date,
         time: time,
         description:description,
         status:patientStatus,
@@ -102,11 +103,12 @@ const AppointmentCreate = () => {
         axios.post(url+'api/appointment',data)
         .then(function (response) {
             // alert('success')
+            navigate('/appointment/list');
         })
       }else{
         const data = {
             relatedDoctor:doctorId,
-            date: date,
+            originalDate: date,
             time: time,
             phone:patientPhone,
             description:description,
@@ -116,6 +118,7 @@ const AppointmentCreate = () => {
         axios.post(url+'api/appointment',data)
         .then(function (response) {
             // alert('success')
+            navigate('/appointment/list');
         })
       }
         

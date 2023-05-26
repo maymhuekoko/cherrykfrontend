@@ -54,7 +54,7 @@ function App() {
         <Route path='/treatment/list' element={<List/> }/>
         <Route path='/treatment/create/:id/:name' element={<TreatmentCreate/>} />
         <Route path='/medicine_sale/:aid/:tid' element={<MedicineSale />} />
-        <Route path='/single_payment/:id' element={<Payment />} />
+        <Route path='/single_payment/:id/:tid' element={<Payment />} />
         <Route path='/reports/payment' element={<Payments/>} />
         <Route path='/category' element={<Category/>} />
         <Route path='/subcategory' element={<SubCategory/>} />

@@ -172,6 +172,7 @@ const AppointmentDetail = () => {
         
   }
   const getTreatmentCode = async (id) => {
+    console.log(id);
     const res = await axios.get(url+'api/treatment/'+id);
     console.log('hi');
     console.log(res.data.data[0]);
@@ -186,14 +187,16 @@ const AppointmentDetail = () => {
      document.getElementById('paid').value = 0;
      setLeftAmount(totalAmount);
      setIsCash(false);
+     setMethod('Credit');
     }else{
       if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash In Hand'))}
       if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash At Bank'))}
       setIsCash(true);
       document.getElementById('paid').value = 0;
       setLeftAmount('');
+      setMethod('Cash Down');
     }
-    setMethod(val);
+    
   }
   
   const storeTreatmentSelection = () => {
@@ -219,7 +222,7 @@ const AppointmentDetail = () => {
     const res = axios.post(url+'api/treatment-selection',data)
      .then(function (response) {
          console.log('success');
-         
+         window.location.reload(true);
      })
   }
   return (
@@ -291,7 +294,7 @@ const AppointmentDetail = () => {
                 <Td>{treat.totalAmount}</Td>
                 <Td>{treat.leftOverAmount}</Td>
                 <Td>
-                  <Link to={'/single_payment/'+patient._id}><Btn>Payment</Btn></Link>
+                  <Link to={'/single_payment/'+patient._id+'/'+treat._id}><Btn>Payment</Btn></Link>
                 </Td>
               </Tr>
               <tr>
@@ -308,7 +311,7 @@ const AppointmentDetail = () => {
                             <th>Appointment Status</th>
                             <th>
                               {/* <Btn>Change Status</Btn> */}
-                              <Link to={'/procedure-history/'+treat._id+'/'+app._id}><Btn style={{marginLeft:'20px'}}>Add Procedure History</Btn></Link>
+                              <Link to={'/procedure-history/'+treat._id+'/'+app._id}><button className='btn btn-sm btn-outline-primary' style={{marginLeft:'20px'}}>+ProcedureHistory</button></Link>
                               </th>
                         </tr>))}
                         <tr>

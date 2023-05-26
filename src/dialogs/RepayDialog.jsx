@@ -22,6 +22,7 @@ const RepayDialog = (props) => {
   const [aid,setAid] = useState();
   const [isAppointment,setIsAppointment] = useState('');
   const [isPrint,setIsPrint] = useState(false);
+  const [remain,setRemain] = useState(0);
   const url =  useSelector(state=>state.auth.url);
   console.log(props.credit);
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const RepayDialog = (props) => {
         const res = await axios.get(url+'api/accounting-lists');
         setAccounts(res.data.list);
         setAccountings(res.data.list);
+        console.log(res.data.list);
       }catch(err){}
     };
     getAccounts();
@@ -71,11 +73,12 @@ const RepayDialog = (props) => {
      })
   }
   const getPaymentMethod = (val) => {
+    // alert(val);
     setMethod(val);
       if(val == 'Cash'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash In Hand'))}
       if(val == 'Bank'){setAccounts(accountings.filter((el)=>el.relatedType.name == 'Assets' && el.relatedHeader.name == 'Cash At Bank'))}
       setIsCash(true);
-      document.getElementById('paid').value = 0;
+      // document.getElementById('paid').value = 0;
   }
   const print = () =>{
     if(document.getElementById('print').checked){
@@ -108,15 +111,15 @@ const RepayDialog = (props) => {
             ))}
             </select>
             </div>
-            <div className='col-12 mt-2 form-group '>
+            {props.method != 'Cash Down' && <div className='col-12 mt-2 form-group '>
             <label>Payment Method<span>*</span></label>
             <select className='form-control' onChange={(e)=>getPaymentMethod(e.target.value)}>
             <option>Select Payment Method</option>
-            {/* <option value="Credit">Credit</option> */}
-            <option value="Cash Down">Cash Down</option>
+    
+            <option value="Cash">Cash Down</option>
             <option value="Bank">Bank</option>
             </select>
-            </div>
+            </div>}
             {isCash && <div className='col-12 mt-2 form-group'>
             <label>Bank Information<span>*</span></label>
             <select className='form-control' onChange={(e)=>setBankAcc(e.target.value)}>
@@ -128,8 +131,13 @@ const RepayDialog = (props) => {
             </div>}
             
             <div className='col-12 mt-2'>
-            <label htmlFor="">Pay Amount:</label>
-            <input type="number" className='form-control' onChange={(e)=>setAmount(e.target.value)}/>
+            <label htmlFor="">Pay Amount:  </label>
+            {props.credit != 0 &&<input type="number" className='form-control' onChange={(e)=>{setAmount(e.target.value);setRemain(props.credit-e.target.value);}}/>}
+            {props.credit == 0 &&<input type="number" className='form-control' onChange={(e)=>{setAmount(e.target.value-props.total);setRemain(props.total-e.target.value);}}/>}
+            </div>
+            <div className='col-12 mt-2'>
+            <label htmlFor="">Remaining Amount:</label>
+            <input type="number" className='form-control' value={remain}/>
             </div>
             <div className='col-12 mt-2'>
             <label htmlFor="">Pay Date:</label>
