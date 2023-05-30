@@ -64,7 +64,12 @@ const RepayDialog = (props) => {
     .then(function (response) {
       setIsShow(false);
       if(isPrint){
-        navigate('/voucher/'+response.data.treatmentVoucherResult._id);
+        navigate('/voucher/'+response.data.treatmentVoucherResult._id,
+        {
+          state: {
+              left: remain,
+          },
+      });
       }else{
         window.location.reload(true);
       }

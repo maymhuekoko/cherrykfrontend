@@ -7,15 +7,21 @@ import ReactToPrint from "react-to-print";
 
 const Voucher = () => {
     const [treatment,setTreatment] = useState([]);
-    const id = useLocation().pathname.split('/')[2];
+    const [arr,setArr] = useState([]);
+    // const id = useLocation().pathname.split('/')[2];
     const url =  useSelector(state=>state.auth.url);
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log('rem');
+    console.log(location.state.left);
     let componentRef = useRef();
     useEffect(()=>{
         const getTreatment = async () => {
-            const res =await axios.get(url+'api/treatment-voucher/'+id);
+            const res =await axios.get(url+'api/treatment-voucher/'+location.pathname.split('/')[2]);
             setTreatment(res.data.data);
+            setArr(res.data.data[0]);
             console.log(res.data.data);
+            // console.log(location.left);
           }
           getTreatment();
     },[])
@@ -44,13 +50,13 @@ const Voucher = () => {
                     </div>
                     <div className='row mt-2'>
                     <div className='col-8'>
-                        <h6>Voucher Date:</h6>
-                        <h6>Voucher Code:</h6>
+                        <h6>Voucher Date:{arr.createdAt.split('T')[0]}</h6>
+                        <h6>Voucher Code:{arr.code}</h6>
                     </div>
                     <div className='col-4'>
-                        <h6>Patient Name:</h6>
-                        <h6>Phone No:</h6>
-                        <h6>Appointment:</h6>
+                        <h6>Patient Name:{arr.relatedPatient.name}</h6>
+                        <h6>Phone No:{arr.relatedPatient.phone}</h6>
+                        <h6>Appointment:{arr.relatedAppointment.originalDate.split('T')[0]}</h6>
                     </div>
                     </div>
                     <table className='table table-striped'>
@@ -61,7 +67,7 @@ const Voucher = () => {
                                 <th>Treatment Unit Name</th>
                                 <th>Total Charges</th>
                                 <th>Pay Amount</th>
-                                <th>LeftOver Amount</th>
+                                {/* <th>LeftOver Amount</th> */}
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -71,7 +77,7 @@ const Voucher = () => {
                                     <td>{treat.relatedTreatment.treatmentName}</td>
                                     <td>{treat.relatedTreatment.sellingPrice}</td>
                                     <td>{treat.amount}</td>
-                                    <td>100000</td>
+                                    {/* <td>{location.left}</td> */}
                                 </tr>))}
                         </tbody>
                     </table>

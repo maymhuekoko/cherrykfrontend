@@ -216,7 +216,7 @@ const Patient = () => {
               <Td>{patient.dateOfBirth}</Td>
               <Td>{patient.gender}</Td>
               <Td>{patient.address}</Td>
-              <Td><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Td>
+              <Td><Link to={'/appointment/'+patient._id}><Btn className='btn btn-sm btn-primary'>Detail<AiFillInfoCircle style={{marginLeft:'7px'}}/></Btn></Link></Td>
             </Tr>
             ))
             }

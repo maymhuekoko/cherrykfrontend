@@ -114,10 +114,10 @@ const Appointment = () => {
             {appointments.map((appointment,i) => (
               <Tr key={appointment.id}>
               <Td>{++i}</Td>
-              <Td>{appointment.date}</Td>
+              <Td>{appointment.originalDate.split('T')[0]}</Td>
               <Td>{appointment.time}</Td>
               <Td>{appointment.relatedPatient.name}</Td>
-              <Td>{appointment.phone}</Td>
+              <Td>{appointment.relatedPatient.phone}</Td>
               <Td>{appointment.relatedDoctor.name}</Td>
               <Td>{appointment.description}</Td>
               <Td><Badge>{appointment.relatedPatient.patientStatus}</Badge></Td>

@@ -165,6 +165,8 @@ const AppointmentDetail = () => {
     //   selections.push(el);
     // })
     // const uniqueTags = [];
+    console.log('code')
+    console.log(res.data.data[0].relatedTreatmentSelection);
     res.data.data[0].relatedTreatmentSelection.map((item) => {
       var findItem = selections.find((x) => x._id === item._id);
       if (!findItem) selections.push(item);

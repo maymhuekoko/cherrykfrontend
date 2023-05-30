@@ -260,7 +260,7 @@ const Sidebar = ({children}) => {
          }
         </section>
         </motion.div>}
-        {location != '/' && !auth ? <img src={require('../../src/404.png')} width='900px'/> :
+        {location != '/' && !auth ? <img src={require('../../src/401.png')} width='900px'/> :
         <main>
             {children}
         </main>}

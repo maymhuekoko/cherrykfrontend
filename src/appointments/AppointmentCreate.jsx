@@ -146,6 +146,7 @@ const AppointmentCreate = () => {
                     <Option>Select Patient</Option>
                     {
                         patients.map((patient,i)=>(
+                            patient.patientStatus == 'Old' &&
                             <Option value={patient._id}>{patient.name}</Option>
                         ))
                     }
