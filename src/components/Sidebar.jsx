@@ -73,6 +73,16 @@ const routes= [
                 icon : <MdAccountBalance/>   ,
             },
             {
+                path : '/stockcount_request',
+                name : 'Stock Count Request', 
+                icon : <MdAccountBalance/>   ,
+            },
+            {
+                path : '/stockcount_transfer',
+                name : 'Stock Count Transfer', 
+                icon : <MdAccountBalance/>   ,
+            },
+            {
                 path : '/purchase',
                 name : 'Purchase List', 
                 icon : <BiPurchaseTag/>   ,

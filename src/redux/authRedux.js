@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
-    name: "medicinesale",
+    name: "auth",
     initialState: {
       url : 'http://clinicdenovobackend.kwintechnologies.com:3000/',
       login : false,

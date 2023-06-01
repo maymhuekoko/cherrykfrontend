@@ -3,6 +3,12 @@ import { Routes,Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login'
 import StockCount from './pages/StockCount'
+import StockCountRequest from './pages/RequestList'
+import StockCountRequestCreate from './pages/StockCountRequest'
+import StockCountRequestUpdate from './pages/RequestUpdate'
+import StockCountTransfer from './pages/TransferList'
+import StockCountTransferCreate from './pages/StockCountTransfer'
+import StockCountTransferUpdate from './pages/TransferUpdate'
 import Purchase from './pages/purchase/List'
 import PurchaseDetail from './pages/purchase/Detail'
 import PurchaseEdit from './pages/purchase/Edit'
@@ -66,6 +72,12 @@ function App() {
         <Route path='/procedure_accessory' element={<ProcedureAccessory/>} />
         <Route path='/procedure_accessory/:id/:name' element={<ProcedureAccessoryUnit />} />
         <Route path='/stockcount' element={<StockCount/>} />
+        <Route path='/stockcount_request' element={<StockCountRequest/>} />
+        <Route path='/stock-request-create' element={<StockCountRequestCreate/>} />
+        <Route path='/sq-Update/:id' element={<StockCountRequestUpdate/>} />
+        <Route path='/stockcount_transfer' element={<StockCountTransfer/>} />
+        <Route path='/stock-tran-create/:id' element={<StockCountTransferCreate/>} />
+        <Route path='/st-update/:id' element={<StockCountTransferUpdate/>} />
         <Route path='/purchase' element={<Purchase/>} />
         <Route path='/purchase/:id' element={<PurchaseDetail/>} />
         <Route path='/edit_purchase/:id' element={<PurchaseEdit/>} />

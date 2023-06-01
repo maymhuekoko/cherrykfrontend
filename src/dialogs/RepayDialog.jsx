@@ -63,13 +63,9 @@ const RepayDialog = (props) => {
     axios.put(url+'api/treatment-selections/payment',data)
     .then(function (response) {
       setIsShow(false);
+      console.log(response.data);
       if(isPrint){
-        navigate('/voucher/'+response.data.treatmentVoucherResult._id,
-        {
-          state: {
-              left: remain,
-          },
-      });
+        navigate('/voucher/'+response.data.treatmentVoucherResult._id);
       }else{
         window.location.reload(true);
       }
